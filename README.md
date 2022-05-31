@@ -64,6 +64,30 @@ void main() async{
   }
 ```
 
+## Customization
+
+Here is a list of properties available to customize your widget:
+
+| Name | Type | Description |
+|-----|-----|------|
+|imageResolution| ImageResolution | callback invoked when the selection changes |
+|defaultCameraLens| CameraLens | used this to set initial camera lens direction |
+|defaultFlashMode| CameraFlashMode | used this to set initial camera flash mode |
+|enableAudio| bool | set false to disable caputre sound |
+|autoCapture| bool | set true to capture image on face detected |
+|showControls| bool | set false to hide all controls |
+|showCaptureControl| bool | set false to hide capture icon button |
+|showFlashControl| bool | set false to hide flash control icon button |
+|showCameraLensControl| bool | set false to hide camera lens control icon button |
+|message| String | use this pass a message above the camera |
+|messageStyle| TextStyle | style applied to the message widget |
+|orientation| CameraOrientation | use this to lock camera orientation |
+|onCapture| Function(File) | callback invoked when camera captured image |
+|captureControlIcon| Widget | use this to render a custom widget for capture control |
+|lensControlIcon| Widget | use this to render a custom widget for camera lens control |
+|flashControlBuilder| FlashControlBuilder | use this to build a custom widget for flash control based on camera flash mode |
+
+
 ### Support the Library
 
 You can support the library by liking it on pub, staring in on Github and reporting any bugs you encounter.
