@@ -6,7 +6,7 @@
 First, add `face_camera` as a dependency in your pubspec.yaml file.
 
 ```dart  
-google_mlkit_face_detection: ^0.0.1
+face_camera: ^0.0.1
 ```
 
 ## iOS
