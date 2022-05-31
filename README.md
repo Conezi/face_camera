@@ -70,6 +70,7 @@ Here is a list of properties available to customize your widget:
 
 | Name | Type | Description |
 |-----|-----|------|
+|onCapture| Function(File) | callback invoked when camera captured image |
 |imageResolution| ImageResolution | used this to set image resolution |
 |defaultCameraLens| CameraLens | used this to set initial camera lens direction |
 |defaultFlashMode| CameraFlashMode | used this to set initial camera flash mode |
@@ -82,7 +83,6 @@ Here is a list of properties available to customize your widget:
 |message| String | use this pass a message above the camera |
 |messageStyle| TextStyle | style applied to the message widget |
 |orientation| CameraOrientation | use this to lock camera orientation |
-|onCapture| Function(File) | callback invoked when camera captured image |
 |captureControlIcon| Widget | use this to render a custom widget for capture control |
 |lensControlIcon| Widget | use this to render a custom widget for camera lens control |
 |flashControlBuilder| FlashControlBuilder | use this to build a custom widget for flash control based on camera flash mode |
