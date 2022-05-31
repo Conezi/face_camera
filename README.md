@@ -11,7 +11,7 @@ face_camera: ^0.0.1
 
 ## iOS
 * Minimum iOS Deployment Target: 10.0
-* Follow this Check this <a href="https://developer.apple.com/support/required-device-capabilities/">link</a> and setup your app to use `ML Kit`
+* Follow this <a href="https://developer.apple.com/support/required-device-capabilities/">link</a> and setup your app to use `ML Kit`
 
 Add two rows to the `ios/Runner/Info.plist:`
 * one with the key `Privacy - Camera Usage Description` and a usage description.
