@@ -68,7 +68,7 @@ void main() async{
   }
 ```
 
-## Customization
+### Customization
 
 Here is a list of properties available to customize your widget:
 
