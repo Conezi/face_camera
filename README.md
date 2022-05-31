@@ -73,7 +73,7 @@ Here is a list of properties available to customize your widget:
 |onCapture| Function(File) | callback invoked when camera captured image |
 |imageResolution| ImageResolution | used this to set image resolution |
 |defaultCameraLens| CameraLens | used this to set initial camera lens direction |
-|defaultFlashMode| CameraFlashMode | used this to set initial camera flash mode |
+|defaultFlashMode| CameraFlashMode | used this to set initial flash mode |
 |enableAudio| bool | set false to disable caputre sound |
 |autoCapture| bool | set true to capture image on face detected |
 |showControls| bool | set false to hide all controls |
