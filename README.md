@@ -29,7 +29,7 @@ If editing `Info.plist` as text, add:
 
 
 ## Android
-* Change the minimum Android sdk version to 21 (or higher) in your android/app/build.gradle file.
+* Change the minimum Android sdk version to 21 (or higher) in your `android/app/build.gradle` file.
 
 ```groovy
 minSdkVersion 21
