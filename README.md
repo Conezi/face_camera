@@ -5,8 +5,12 @@
 ## Installation
 First, add `face_camera` as a dependency in your pubspec.yaml file.
 
+```dart  
+google_mlkit_face_detection: ^0.0.1
+```
+
 ## iOS
-* The face_camera plugin compiles for any version of iOS, but its functionality requires iOS 10 or higher. If compiling for iOS 9, make sure to programmatically check the version of iOS running on the device before using any camera plugin features. The device_info_plus plugin, for example, can be used to check the iOS version.
+* The `face_camera` plugin compiles for any version of iOS, but its functionality requires iOS 10 or higher. If compiling for iOS 9, make sure to programmatically check the version of iOS running on the device before using any camera plugin features. The device_info_plus plugin, for example, can be used to check the iOS version.
 
 Add two rows to the ios/Runner/Info.plist:
 
