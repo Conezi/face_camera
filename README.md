@@ -47,6 +47,22 @@ void main() async{
   runApp(const MyApp());
 }
 ```
+* Then render the component in your application setting the onCapture callback.
+```dart
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SmartFaceCamera(
+          autoCapture: true,
+          defaultCameraLens: CameraLens.front,
+          message: 'Center your face in the sqaure',
+          onCapture: (File? image){
+            setState(()=> _capturedImage=image);
+          },
+        )
+    );
+  }
+```
 
 ### Support the Library
 
