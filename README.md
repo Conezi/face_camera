@@ -77,9 +77,9 @@ Here is a list of properties available to customize your widget:
 |enableAudio| bool | set false to disable caputre sound |
 |autoCapture| bool | set true to capture image on face detected |
 |showControls| bool | set false to hide all controls |
-|showCaptureControl| bool | set false to hide capture icon button |
-|showFlashControl| bool | set false to hide flash control icon button |
-|showCameraLensControl| bool | set false to hide camera lens control icon button |
+|showCaptureControl| bool | set false to hide capture control icon |
+|showFlashControl| bool | set false to hide flash control control icon |
+|showCameraLensControl| bool | set false to hide camera lens control icon |
 |message| String | use this pass a message above the camera |
 |messageStyle| TextStyle | style applied to the message widget |
 |orientation| CameraOrientation | use this to lock camera orientation |
