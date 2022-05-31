@@ -10,7 +10,10 @@ face_camera: ^0.0.1
 ```
 
 ## iOS
-* The `face_camera` plugin compiles for any version of iOS, but its functionality requires iOS 10 or higher. If compiling for iOS 9, make sure to programmatically check the version of iOS running on the device before using any camera plugin features. The device_info_plus plugin, for example, can be used to check the iOS version.
+* Minimum iOS Deployment Target: 10.0
+* Xcode 13 or newer
+* Swift 5
+* ML Kit only supports 64-bit architectures (x86_64 and arm64). Check this <a href="https://developer.apple.com/support/required-device-capabilities/">list</a> to see if your device has the required device capabilities.
 
 Add two rows to the `ios/Runner/Info.plist:`
 
