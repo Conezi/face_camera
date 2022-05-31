@@ -70,7 +70,7 @@ Here is a list of properties available to customize your widget:
 
 | Name | Type | Description |
 |-----|-----|------|
-|imageResolution| ImageResolution | callback invoked when the selection changes |
+|imageResolution| ImageResolution | used this to set image resolution |
 |defaultCameraLens| CameraLens | used this to set initial camera lens direction |
 |defaultFlashMode| CameraFlashMode | used this to set initial camera flash mode |
 |enableAudio| bool | set false to disable caputre sound |
