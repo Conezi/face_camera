@@ -13,7 +13,7 @@ face_camera: ^0.0.1
 * Minimum iOS Deployment Target: 10.0
 * Xcode 13 or newer
 * Swift 5
-* ML Kit only supports 64-bit architectures (x86_64 and arm64). Check this <a href="https://developer.apple.com/support/required-device-capabilities/">list</a> to see if your device has the required device capabilities.
+* `face_camera` only supports 64-bit architectures (x86_64 and arm64). Check this <a href="https://developer.apple.com/support/required-device-capabilities/">list</a> to see if your device has the required device capabilities.
 
 Add two rows to the `ios/Runner/Info.plist:`
 
