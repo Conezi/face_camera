@@ -1,7 +1,7 @@
 name: face_camera
 description: A Flutter camera plugin that detects face in real-time.
 version: 0.0.1
-homepage:
+homepage: https://github.com/Conezi/face_camera
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
