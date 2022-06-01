@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
             return SmartFaceCamera(
               defaultCameraLens: CameraLens.front,
               message: 'Center your face in the sqaure',
-              //autoCapture: true,
+              autoCapture: true,
               onCapture: (File? image){
                 setState(()=> _capturedImage=image);
               },
