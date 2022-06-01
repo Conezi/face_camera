@@ -11,6 +11,7 @@ import 'models/scanned_image.dart';
 import 'paints/face_painter.dart';
 import 'paints/hole_painter.dart';
 import 'res/builders.dart';
+import 'utils/logger.dart';
 
 class SmartFaceCamera extends StatefulWidget {
 
@@ -56,14 +57,6 @@ class SmartFaceCamera extends StatefulWidget {
 
   @override
   _SmartFaceCameraState createState() => _SmartFaceCameraState();
-}
-
-void logError(String message, [String? code]) {
-  if (code != null) {
-    debugPrint('Error: $code\nError Message: $message');
-  } else {
-    debugPrint('Error: $code');
-  }
 }
 
 class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingObserver, TickerProviderStateMixin {
@@ -134,7 +127,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
     }
 
     _startImageStream();
-    //await Future.delayed(const Duration(seconds: 1)).whenComplete(() => _startImageStream());
+
   }
 
 
@@ -176,9 +169,9 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
     }
 
     if (state == AppLifecycleState.inactive) {
-      cameraController.dispose();
+      cameraController.stopImageStream();
     } else if (state == AppLifecycleState.resumed) {
-      _initCamera();
+      _startImageStream();
     }
   }
 
@@ -191,7 +184,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
     return Stack(
       alignment: Alignment.center,
       children: [
-        if (cameraController!=null&&cameraController.value.isInitialized)...[
+        if (cameraController!=null && cameraController.value.isInitialized)...[
           Transform.scale(
             scale: 1.0,
             child: AspectRatio(
@@ -206,22 +199,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
                     child: Stack(
                       fit: StackFit.expand,
                       children: <Widget>[
-                        CameraPreview(
-                            cameraController,
-                            child: Builder(
-                              builder: (context) {
-                                if(widget.message!=null){
-                                  return Padding(
-                                    padding: const EdgeInsets
-                                        .symmetric(horizontal: 55, vertical: 15),
-                                    child: Text(widget.message!,
-                                        textAlign: TextAlign.center,
-                                        style: widget.messageStyle),
-                                  );
-                                }
-                                return const SizedBox.shrink();
-                              }
-                            )),
+                        _cameraDisplayWidget(),
                         if(_scannedImage!=null)...[
                           SizedBox(
                               width: cameraController.value.previewSize!.width,
@@ -285,6 +263,31 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
       ],
     );
   }
+
+  /// Render camera.
+  Widget _cameraDisplayWidget(){
+    final CameraController? cameraController = _controller;
+    if(cameraController!=null && cameraController.value.isInitialized){
+      return CameraPreview(
+          cameraController,
+          child: Builder(
+              builder: (context) {
+                if(widget.message!=null){
+                  return Padding(
+                    padding: const EdgeInsets
+                        .symmetric(horizontal: 55, vertical: 15),
+                    child: Text(widget.message!,
+                        textAlign: TextAlign.center,
+                        style: widget.messageStyle),
+                  );
+                }
+                return const SizedBox.shrink();
+              }
+          ));
+    }
+    return const SizedBox.shrink();
+  }
+
 
   /// Display the control buttons to take pictures.
   Widget _captureControlWidget() {
