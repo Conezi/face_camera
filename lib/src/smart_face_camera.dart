@@ -397,8 +397,15 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
           widget.onCapture(File(file!.path));
 
           /// Resume image stream after 2 seconds of capture
-           Future.delayed(const Duration(seconds: 2))
-               .whenComplete(() => _startImageStream());
+          if(mounted){
+            try{
+              Future.delayed(const Duration(seconds: 2))
+                  .whenComplete(() => _startImageStream());
+            }catch(e){
+              logError(e.toString());
+            }
+          }
+
 
         });
       });
