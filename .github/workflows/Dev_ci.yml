@@ -1,0 +1,31 @@
+name: DEV_CI
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  Test_and_build:
+    name: Run flutter test and analyze
+    runs-on: ubuntu-latest
+    steps:
+      # Setup Java environment in order to build the Android app.
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+         
+      # Setup the flutter environment.
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'stable' # 'dev', 'alpha', default to: 'stable'
+          flutter-version: '2.10.3' # you can also specify exact version of flutter
+
+      # Get flutter dependencies.
+      - run: flutter pub get
+
+      # Statically analyze the Dart code for any errors.
+      - run: flutter analyze .
+
+      # Run widget tests for our flutter project.
+      - run: flutter test
