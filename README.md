@@ -71,7 +71,7 @@ void main() async{
           defaultCameraLens: CameraLens.front,
           message: 'Center your face in the sqaure',
           onCapture: (File? image){
-            setState(()=> _capturedImage=image);
+            
           },
         )
     );
