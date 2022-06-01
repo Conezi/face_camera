@@ -2,6 +2,11 @@
 
 #### A Flutter camera plugin that detects face in real-time.
 
+---  
+
+![](https://github.com/Conezi/face_camera/blob/main/demo/preview.gif?raw=true)
+
+
 ### Installation
 
 First, add `face_camera` as a dependency in your pubspec.yaml file.
