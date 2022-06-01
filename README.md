@@ -69,7 +69,7 @@ void main() async{
         body: SmartFaceCamera(
           autoCapture: true,
           defaultCameraLens: CameraLens.front,
-          message: 'Center your face in the sqaure',
+          message: 'Center your face in the square',
           onCapture: (File? image){
             
           },
