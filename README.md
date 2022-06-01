@@ -104,7 +104,7 @@ Here is a list of properties available to customize your widget:
 
 
 ### Contributions
----  
+ *** 
 
 Contributions of any kind are more than welcome! Feel free to fork and improve `face_camera` in any way you want, make a pull request, or open an issue.
 
