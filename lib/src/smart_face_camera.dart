@@ -81,7 +81,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
 
     for (CameraDescription d in FaceCamera.cameras) {
       final lens=EnumHandler.cameraLensDirectionToCameraLens(d.lensDirection);
-      if(lens!=null) _avaliableCameraLens.add(lens);
+      if(lens!=null && !_avaliableCameraLens.contains(lens)) _avaliableCameraLens.add(lens);
     }
 
    if(widget.defaultCameraLens!=null){
@@ -141,7 +141,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
   
   @override
   void initState() {
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     _getAllAvialableCameraLens();
     _initCamera();
     super.initState();
@@ -149,7 +149,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     final CameraController? cameraController = _controller;
 
     if (cameraController != null && cameraController.value.isInitialized) {
@@ -174,8 +174,6 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
       _startImageStream();
     }
   }
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -369,8 +367,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
 
   void showInSnackBar(String message) {
-    // ignore: deprecated_member_use
-    _scaffoldKey.currentState?.showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   void onViewFinderTap(TapDownDetails details, BoxConstraints constraints) {

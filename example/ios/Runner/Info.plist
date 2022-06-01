@@ -47,5 +47,7 @@
     <string>Camera permission is required for image upload.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>This app needs to be able to access your microphone</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>
