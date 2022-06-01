@@ -2,12 +2,14 @@
 
 #### A Flutter camera plugin that detects face in real-time.
 
+### Preview
 ---  
 
 ![](https://github.com/Conezi/face_camera/blob/main/demo/preview.gif?raw=true)
 
 
 ### Installation
+---  
 
 First, add `face_camera` as a dependency in your pubspec.yaml file.
 
@@ -16,6 +18,7 @@ face_camera: ^0.0.1
 ```
 
 ### iOS
+---  
 
 * Minimum iOS Deployment Target: 10.0
 * Follow this <a href="https://developer.apple.com/support/required-device-capabilities/">link</a> and setup  `ML Kit` this is required for `face_camera` to function properly in `iOS`
@@ -36,6 +39,7 @@ If editing `Info.plist` as text, add:
 
 
 ### Android
+---  
 
 * Change the minimum Android sdk version to 21 (or higher) in your `android/app/build.gradle` file.
 
@@ -45,6 +49,7 @@ minSdkVersion 21
 
 
 ### Usage
+---  
 
 * The first step is to initialize `face_camera` in `main.dart`
 ```dart
@@ -74,6 +79,7 @@ void main() async{
 ```
 
 ### Customization
+---  
 
 Here is a list of properties available to customize your widget:
 
@@ -98,9 +104,11 @@ Here is a list of properties available to customize your widget:
 
 
 ### Contributions
+---  
 
 Contributions of any kind are more than welcome! Feel free to fork and improve `face_camera` in any way you want, make a pull request, or open an issue.
 
 ### Support the Library
+---  
 
 You can support the library by liking it on pub, staring in on Github and reporting any bugs you encounter.
