@@ -14,7 +14,6 @@ import 'res/builders.dart';
 import 'utils/logger.dart';
 
 class SmartFaceCamera extends StatefulWidget {
-
   final ImageResolution imageResolution;
   final CameraLens? defaultCameraLens;
   final CameraFlashMode defaultFlashMode;
@@ -32,83 +31,80 @@ class SmartFaceCamera extends StatefulWidget {
   final Widget? lensControlIcon;
   final FlashControlBuilder? flashControlBuilder;
 
-
-  const SmartFaceCamera({
-    this.imageResolution=ImageResolution.medium,
-    this.defaultCameraLens,
-    this.enableAudio=true,
-    this.autoCapture=false,
-    this.showControls=true,
-    this.showCaptureControl=true,
-    this.showFlashControl=true,
-    this.showCameraLensControl=true,
-    this.message,
-    this.defaultFlashMode=CameraFlashMode.auto,
-    this.orientation=CameraOrientation.portraitUp,
-    this.messageStyle= const TextStyle(
-        fontSize: 14,
-        height: 1.5,
-        fontWeight: FontWeight.w400),
-    required this.onCapture,
-    this.captureControlIcon,
-    this.lensControlIcon,
-    this.flashControlBuilder,
-    Key? key}) : super(key: key);
+  const SmartFaceCamera(
+      {this.imageResolution = ImageResolution.medium,
+      this.defaultCameraLens,
+      this.enableAudio = true,
+      this.autoCapture = false,
+      this.showControls = true,
+      this.showCaptureControl = true,
+      this.showFlashControl = true,
+      this.showCameraLensControl = true,
+      this.message,
+      this.defaultFlashMode = CameraFlashMode.auto,
+      this.orientation = CameraOrientation.portraitUp,
+      this.messageStyle = const TextStyle(
+          fontSize: 14, height: 1.5, fontWeight: FontWeight.w400),
+      required this.onCapture,
+      this.captureControlIcon,
+      this.lensControlIcon,
+      this.flashControlBuilder,
+      Key? key})
+      : super(key: key);
 
   @override
   _SmartFaceCameraState createState() => _SmartFaceCameraState();
 }
 
-class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingObserver, TickerProviderStateMixin {
-
+class _SmartFaceCameraState extends State<SmartFaceCamera>
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   CameraController? _controller;
 
   bool _alreadyCheckingImage = false;
 
   ScannedImage? _scannedImage;
 
-  int _currentFlashMode=0;
-  final List<CameraFlashMode> _avialableFlashMode=[
+  int _currentFlashMode = 0;
+  final List<CameraFlashMode> _avialableFlashMode = [
     CameraFlashMode.off,
     CameraFlashMode.auto,
     CameraFlashMode.always
   ];
 
-  int _currentCameraLens=0;
+  int _currentCameraLens = 0;
   final List<CameraLens> _avaliableCameraLens = [];
 
-  void _getAllAvialableCameraLens(){
-
+  void _getAllAvialableCameraLens() {
     for (CameraDescription d in FaceCamera.cameras) {
-      final lens=EnumHandler.cameraLensDirectionToCameraLens(d.lensDirection);
-      if(lens!=null && !_avaliableCameraLens.contains(lens)) _avaliableCameraLens.add(lens);
+      final lens = EnumHandler.cameraLensDirectionToCameraLens(d.lensDirection);
+      if (lens != null && !_avaliableCameraLens.contains(lens)) {
+        _avaliableCameraLens.add(lens);
+      }
     }
 
-   if(widget.defaultCameraLens!=null){
-     try{
-       _currentCameraLens=_avaliableCameraLens
-           .indexOf(widget.defaultCameraLens!);
-     }catch(e){
-       logError(e.toString());
-     }
-   }
-
+    if (widget.defaultCameraLens != null) {
+      try {
+        _currentCameraLens =
+            _avaliableCameraLens.indexOf(widget.defaultCameraLens!);
+      } catch (e) {
+        logError(e.toString());
+      }
+    }
   }
 
   Future<void> _initCamera() async {
+    final cameras = FaceCamera.cameras
+        .where((c) =>
+            c.lensDirection ==
+            EnumHandler.cameraLensToCameraLensDirection(
+                _avaliableCameraLens[_currentCameraLens]))
+        .toList();
 
-    final cameras  = FaceCamera.cameras.where((c) => c.lensDirection
-        == EnumHandler.cameraLensToCameraLensDirection(
-            _avaliableCameraLens[_currentCameraLens])).toList();
-
-
-    if(cameras.isNotEmpty){
-      _controller = CameraController(
-          cameras.first,
+    if (cameras.isNotEmpty) {
+      _controller = CameraController(cameras.first,
           EnumHandler.imageResolutionToResolutionPreset(widget.imageResolution),
           enableAudio: widget.enableAudio,
-          imageFormatGroup: ImageFormatGroup.jpeg
-      );
+          imageFormatGroup: ImageFormatGroup.jpeg);
 
       await _controller!.initialize().then((_) {
         if (!mounted) {
@@ -117,28 +113,30 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
         setState(() {});
       });
 
-      
-     await _changeFlashMode(_avialableFlashMode.indexOf(widget.defaultFlashMode));
+      await _changeFlashMode(
+          _avialableFlashMode.indexOf(widget.defaultFlashMode));
 
-      await _controller!.lockCaptureOrientation(EnumHandler.
-      cameraOrientationToDeviceOrientation(widget.orientation)).then((_){
+      await _controller!
+          .lockCaptureOrientation(
+              EnumHandler.cameraOrientationToDeviceOrientation(
+                  widget.orientation))
+          .then((_) {
         if (mounted) setState(() {});
       });
     }
 
     _startImageStream();
-
   }
-
 
   Future<void> _changeFlashMode(int index) async {
-    await _controller!.setFlashMode(EnumHandler.
-    cameraFlashModeToFlashMode(_avialableFlashMode[index])).then((_) {
-      if (mounted) setState(()=>_currentFlashMode=index);
+    await _controller!
+        .setFlashMode(
+            EnumHandler.cameraFlashModeToFlashMode(_avialableFlashMode[index]))
+        .then((_) {
+      if (mounted) setState(() => _currentFlashMode = index);
     });
   }
-  
-  
+
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
@@ -177,12 +175,13 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
 
   @override
   Widget build(BuildContext context) {
-    final size=MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     final CameraController? cameraController = _controller;
     return Stack(
       alignment: Alignment.center,
       children: [
-        if (cameraController!=null && cameraController.value.isInitialized)...[
+        if (cameraController != null &&
+            cameraController.value.isInitialized) ...[
           Transform.scale(
             scale: 1.0,
             child: AspectRatio(
@@ -198,10 +197,11 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
                       fit: StackFit.expand,
                       children: <Widget>[
                         _cameraDisplayWidget(),
-                        if(_scannedImage!=null)...[
+                        if (_scannedImage != null) ...[
                           SizedBox(
                               width: cameraController.value.previewSize!.width,
-                              height: cameraController.value.previewSize!.height,
+                              height:
+                                  cameraController.value.previewSize!.height,
                               child: CustomPaint(
                                 painter: FacePainter(
                                     face: _scannedImage!.detectedFace,
@@ -218,9 +218,8 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
               ),
             ),
           )
-        ] else...[
-          const Text(
-              'No Camera Detected',
+        ] else ...[
+          const Text('No Camera Detected',
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.w500,
@@ -230,62 +229,47 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
             painter: HolePainter(),
           )
         ],
-
-        if(widget.showControls)...[
-          Align(alignment:  Alignment.bottomCenter,
+        if (widget.showControls) ...[
+          Align(
+            alignment: Alignment.bottomCenter,
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if(widget.showFlashControl)...[
-                    _flashControlWidget()
-                  ],
-
-                  if(widget.showCaptureControl)...[
+                  if (widget.showFlashControl) ...[_flashControlWidget()],
+                  if (widget.showCaptureControl) ...[
                     const SizedBox(width: 15),
                     _captureControlWidget(),
                     const SizedBox(width: 15)
                   ],
-
-                  if(widget.showCameraLensControl)...[
-                    _lensControlWidget()
-                  ],
-
+                  if (widget.showCameraLensControl) ...[_lensControlWidget()],
                 ],
               ),
             ),
           )
         ]
-
       ],
     );
   }
 
   /// Render camera.
-  Widget _cameraDisplayWidget(){
+  Widget _cameraDisplayWidget() {
     final CameraController? cameraController = _controller;
-    if(cameraController!=null && cameraController.value.isInitialized){
-      return CameraPreview(
-          cameraController,
-          child: Builder(
-              builder: (context) {
-                if(widget.message!=null){
-                  return Padding(
-                    padding: const EdgeInsets
-                        .symmetric(horizontal: 55, vertical: 15),
-                    child: Text(widget.message!,
-                        textAlign: TextAlign.center,
-                        style: widget.messageStyle),
-                  );
-                }
-                return const SizedBox.shrink();
-              }
-          ));
+    if (cameraController != null && cameraController.value.isInitialized) {
+      return CameraPreview(cameraController, child: Builder(builder: (context) {
+        if (widget.message != null) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 15),
+            child: Text(widget.message!,
+                textAlign: TextAlign.center, style: widget.messageStyle),
+          );
+        }
+        return const SizedBox.shrink();
+      }));
     }
     return const SizedBox.shrink();
   }
-
 
   /// Display the control buttons to take pictures.
   Widget _captureControlWidget() {
@@ -293,81 +277,77 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
 
     return IconButton(
       iconSize: 70,
-      icon:  widget.captureControlIcon
-          ?? const CircleAvatar(
-          radius: 70,
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(Icons.camera_alt, size: 35),
-          )
-      ),
-      onPressed: cameraController != null &&
-          cameraController.value.isInitialized
-          ? _onTakePictureButtonPressed
-          : null,
+      icon: widget.captureControlIcon ??
+          const CircleAvatar(
+              radius: 70,
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.camera_alt, size: 35),
+              )),
+      onPressed:
+          cameraController != null && cameraController.value.isInitialized
+              ? _onTakePictureButtonPressed
+              : null,
     );
-
   }
 
   /// Display the control buttons to switch between flash modes.
   Widget _flashControlWidget() {
-
     final CameraController? cameraController = _controller;
 
-    final icon=_avialableFlashMode[_currentFlashMode]==CameraFlashMode.always ? Icons.flash_on
-        : _avialableFlashMode[_currentFlashMode]==CameraFlashMode.off ? Icons.flash_off : Icons.flash_auto;
+    final icon =
+        _avialableFlashMode[_currentFlashMode] == CameraFlashMode.always
+            ? Icons.flash_on
+            : _avialableFlashMode[_currentFlashMode] == CameraFlashMode.off
+                ? Icons.flash_off
+                : Icons.flash_auto;
 
     return IconButton(
       iconSize: 38,
-      icon:  widget.flashControlBuilder?.call(context,
-          _avialableFlashMode[_currentFlashMode])
-      ?? CircleAvatar(
-          radius: 38,
-          child: Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Icon(icon, size: 25),
-          )
-      ),
-      onPressed: cameraController != null &&
-          cameraController.value.isInitialized
-          ? ()=>_changeFlashMode((_currentFlashMode+1) % _avialableFlashMode.length)
-          : null,
+      icon: widget.flashControlBuilder
+              ?.call(context, _avialableFlashMode[_currentFlashMode]) ??
+          CircleAvatar(
+              radius: 38,
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Icon(icon, size: 25),
+              )),
+      onPressed:
+          cameraController != null && cameraController.value.isInitialized
+              ? () => _changeFlashMode(
+                  (_currentFlashMode + 1) % _avialableFlashMode.length)
+              : null,
     );
-
   }
-
 
   /// Display the control buttons to switch between camera lens.
   Widget _lensControlWidget() {
-
     final CameraController? cameraController = _controller;
 
     return IconButton(
-      iconSize: 38,
-      icon:  widget.lensControlIcon
-          ?? const CircleAvatar(
-          radius: 38,
-          child: Padding(
-            padding: EdgeInsets.all(2.0),
-            child: Icon(Icons.switch_camera_sharp,
-                size: 25),
-          )
-      ),
-      onPressed: cameraController != null &&
-          cameraController.value.isInitialized
-          ? (){
-        _currentCameraLens=(_currentCameraLens+1)
-            % _avaliableCameraLens.length;
-        _initCamera();
-      } : null
-    );
-
+        iconSize: 38,
+        icon: widget.lensControlIcon ??
+            const CircleAvatar(
+                radius: 38,
+                child: Padding(
+                  padding: EdgeInsets.all(2.0),
+                  child: Icon(Icons.switch_camera_sharp, size: 25),
+                )),
+        onPressed:
+            cameraController != null && cameraController.value.isInitialized
+                ? () {
+                    _currentCameraLens =
+                        (_currentCameraLens + 1) % _avaliableCameraLens.length;
+                    _initCamera();
+                  }
+                : null);
   }
 
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
 
   void showInSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   void onViewFinderTap(TapDownDetails details, BoxConstraints constraints) {
@@ -385,34 +365,31 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
     cameraController.setFocusPoint(offset);
   }
 
-
-  void _onTakePictureButtonPressed() async{
-    final CameraController cameraController = _controller!;
-    try{
-      cameraController.stopImageStream().whenComplete(()async{
+  void _onTakePictureButtonPressed() async {
+    final CameraController? cameraController = _controller;
+    try {
+      cameraController!.stopImageStream().whenComplete(() async {
         await Future.delayed(const Duration(milliseconds: 500));
-        takePicture().then((XFile? file){
-
+        takePicture().then((XFile? file) {
           /// Return image callback
           widget.onCapture(File(file!.path));
 
           /// Resume image stream after 2 seconds of capture
-          if(mounted){
-            try{
-              Future.delayed(const Duration(seconds: 2))
-                  .whenComplete(() => _startImageStream());
-            }catch(e){
-              logError(e.toString());
+
+          Future.delayed(const Duration(seconds: 2)).whenComplete(() {
+            if (mounted && cameraController.value.isInitialized) {
+              try {
+                _startImageStream();
+              } catch (e) {
+                logError(e.toString());
+              }
             }
-          }
-
-
+          });
         });
       });
-    }catch(e){
+    } catch (e) {
       logError(e.toString());
     }
-
   }
 
   Future<XFile?> takePicture() async {
@@ -446,7 +423,6 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
     if (cameraController != null) {
       cameraController.startImageStream(_processImage);
     }
-
   }
 
   void _processImage(CameraImage cameraImage) async {
@@ -454,19 +430,17 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
     if (!_alreadyCheckingImage && mounted) {
       _alreadyCheckingImage = true;
       try {
-        await FaceIdentifier.scanImage(cameraImage: cameraImage,
-            camera: cameraController!.description)
+        await FaceIdentifier.scanImage(
+                cameraImage: cameraImage, camera: cameraController!.description)
             .then((result) async {
-          if(result!=null){
-            try{
+          if (result != null) {
+            try {
+              setState(() => _scannedImage = result);
 
-              setState(()=>_scannedImage=result);
-
-              if(widget.autoCapture && result.wellPositioned){
+              if (widget.autoCapture && result.wellPositioned) {
                 _onTakePictureButtonPressed();
               }
-
-            }catch(e){
+            } catch (e) {
               logError(e.toString());
             }
           }
@@ -477,5 +451,4 @@ class _SmartFaceCameraState extends State<SmartFaceCamera> with WidgetsBindingOb
       }
     }
   }
-
 }

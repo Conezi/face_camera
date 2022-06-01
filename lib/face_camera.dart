@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:camera/camera.dart';
@@ -9,14 +8,12 @@ export 'package:face_camera/src/smart_face_camera.dart';
 export 'package:face_camera/src/res/emums.dart';
 
 class FaceCamera {
-
   //static const MethodChannel _channel = MethodChannel('face_camera');
 
-
-  static late List<CameraDescription> _cameras=[];
+  static late List<CameraDescription> _cameras = [];
 
   /// Initialize device cameras
-  static Future<void> intialize()async{
+  static Future<void> intialize() async {
     /// Fetch the available cameras before initializing the app.
     try {
       _cameras = await availableCameras();
@@ -29,5 +26,4 @@ class FaceCamera {
   static List<CameraDescription> get cameras {
     return _cameras;
   }
-
 }

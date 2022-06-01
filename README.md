@@ -14,7 +14,7 @@
 First, add `face_camera` as a dependency in your pubspec.yaml file.
 
 ```yaml  
-face_camera: ^0.0.1
+face_camera: ^0.0.3
 ```
 
 ### iOS

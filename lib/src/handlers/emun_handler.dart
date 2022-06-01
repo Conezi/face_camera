@@ -1,14 +1,12 @@
-
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 
 import '../res/emums.dart';
 
-class EnumHandler{
-
-  static ResolutionPreset imageResolutionToResolutionPreset(ImageResolution res){
-    switch (res){
-
+class EnumHandler {
+  static ResolutionPreset imageResolutionToResolutionPreset(
+      ImageResolution res) {
+    switch (res) {
       case ImageResolution.low:
         // TODO: Handle this case.
         return ResolutionPreset.low;
@@ -28,12 +26,11 @@ class EnumHandler{
         // TODO: Handle this case.
         return ResolutionPreset.max;
     }
-
   }
 
-
-  static CameraLensDirection? cameraLensToCameraLensDirection(CameraLens? lens){
-    switch(lens){
+  static CameraLensDirection? cameraLensToCameraLensDirection(
+      CameraLens? lens) {
+    switch (lens) {
       case CameraLens.front:
         // TODO: Handle this case.
         return CameraLensDirection.front;
@@ -46,28 +43,27 @@ class EnumHandler{
       default:
         return null;
     }
-
   }
 
-  static CameraLens? cameraLensDirectionToCameraLens(CameraLensDirection? lens){
-    switch(lens){
+  static CameraLens? cameraLensDirectionToCameraLens(
+      CameraLensDirection? lens) {
+    switch (lens) {
       case CameraLensDirection.front:
-      // TODO: Handle this case.
+        // TODO: Handle this case.
         return CameraLens.front;
       case CameraLensDirection.back:
-      // TODO: Handle this case.
+        // TODO: Handle this case.
         return CameraLens.back;
       case CameraLensDirection.external:
-      // TODO: Handle this case.
+        // TODO: Handle this case.
         return CameraLens.external;
       default:
         return null;
     }
-
   }
 
-  static FlashMode cameraFlashModeToFlashMode(CameraFlashMode mode){
-    switch (mode){
+  static FlashMode cameraFlashModeToFlashMode(CameraFlashMode mode) {
+    switch (mode) {
       case CameraFlashMode.off:
         // TODO: Handle this case.
         return FlashMode.off;
@@ -80,9 +76,9 @@ class EnumHandler{
     }
   }
 
-
-  static DeviceOrientation? cameraOrientationToDeviceOrientation(CameraOrientation? orientation){
-    switch(orientation){
+  static DeviceOrientation? cameraOrientationToDeviceOrientation(
+      CameraOrientation? orientation) {
+    switch (orientation) {
       case CameraOrientation.portraitUp:
         // TODO: Handle this case.
         return DeviceOrientation.portraitUp;
@@ -99,5 +95,4 @@ class EnumHandler{
         return null;
     }
   }
-
 }

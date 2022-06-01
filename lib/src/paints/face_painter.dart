@@ -1,9 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
-
-
-
 
 class FacePainter extends CustomPainter {
   FacePainter({required this.imageSize, this.face});
@@ -49,10 +45,10 @@ class FacePainter extends CustomPainter {
 
 RRect _scaleRect(
     {required Rect rect,
-      required Size imageSize,
-      required Size widgetSize,
-      double? scaleX,
-      double? scaleY}) {
+    required Size imageSize,
+    required Size widgetSize,
+    double? scaleX,
+    double? scaleY}) {
   return RRect.fromLTRBR(
       (widgetSize.width - rect.left.toDouble() * scaleX!),
       rect.top.toDouble() * scaleY!,

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 void logError(String message, [String? code]) {

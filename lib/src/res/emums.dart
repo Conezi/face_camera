@@ -23,8 +23,6 @@ enum ImageResolution {
   max,
 }
 
-
-
 /// The direction the camera is facing.
 enum CameraLens {
   /// Front facing camera (a user looking at the screen is seen by the camera).
@@ -48,7 +46,6 @@ enum CameraFlashMode {
   /// Always use the flash when taking a picture.
   always
 }
-
 
 enum CameraOrientation {
   /// If the device shows its boot logo in portrait, then the boot logo is shown
