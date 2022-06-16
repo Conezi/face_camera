@@ -112,7 +112,6 @@ class FaceIdentifier {
       }
     }
 
-    return DetectedFace(
-        wellPositioned: wellPositioned, face: detectedFace!);
+    return DetectedFace(wellPositioned: wellPositioned, face: detectedFace!);
   }
 }
