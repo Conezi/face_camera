@@ -53,14 +53,29 @@ class _MyAppState extends State<MyApp> {
               );
             }
             return SmartFaceCamera(
-              defaultCameraLens: CameraLens.front,
-              message: 'Center your face in the square',
-              autoCapture: true,
-              onCapture: (File? image) {
-                setState(() => _capturedImage = image);
-              },
-            );
+                autoCapture: true,
+                defaultCameraLens: CameraLens.front,
+                onCapture: (File? image) {
+                  setState(() => _capturedImage = image);
+                },
+                messageBuilder: (context, face) {
+                  if (face == null) {
+                    return _message('Place your face in the camera');
+                  }
+                  if (!face.wellPositioned) {
+                    return _message('Center your face in the square');
+                  }
+                  return const SizedBox.shrink();
+                });
           })),
     );
   }
+
+  Widget _message(String msg) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 15),
+        child: Text(msg,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+                fontSize: 14, height: 1.5, fontWeight: FontWeight.w400)),
+      );
 }

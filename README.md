@@ -13,8 +13,9 @@
 
 First, add `face_camera` as a dependency in your pubspec.yaml file.
 
-```yaml  
-face_camera: ^0.0.3
+```yaml
+
+face_camera: ^<latest-version>
 ```
 
 ### iOS
@@ -29,12 +30,12 @@ Add two rows to the `ios/Runner/Info.plist:`
 
 If editing `Info.plist` as text, add:
 
-```xml  
+```
+
 <key>NSCameraUsageDescription</key>
 <string>your usage description here</string>
 <key>NSMicrophoneUsageDescription</key>
 <string>your usage description here</string>
-  
 ```
 
 
@@ -44,6 +45,7 @@ If editing `Info.plist` as text, add:
 * Change the minimum Android sdk version to 21 (or higher) in your `android/app/build.gradle` file.
 
 ```groovy
+
 minSdkVersion 21
 ```
 
@@ -101,7 +103,7 @@ Here is a list of properties available to customize your widget:
 |captureControlIcon| Widget | use this to render a custom widget for capture control |
 |lensControlIcon| Widget | use this to render a custom widget for camera lens control |
 |flashControlBuilder| FlashControlBuilder | use this to build a custom widget for flash control based on camera flash mode |
-
+|messageBuilder| MessageBuilder | use this to build a custom messages based on face position |
 
 ### Contributions
 ---  

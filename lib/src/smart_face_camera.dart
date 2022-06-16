@@ -30,6 +30,7 @@ class SmartFaceCamera extends StatefulWidget {
   final Widget? captureControlIcon;
   final Widget? lensControlIcon;
   final FlashControlBuilder? flashControlBuilder;
+  final MessageBuilder? messageBuilder;
 
   const SmartFaceCamera(
       {this.imageResolution = ImageResolution.medium,
@@ -49,6 +50,7 @@ class SmartFaceCamera extends StatefulWidget {
       this.captureControlIcon,
       this.lensControlIcon,
       this.flashControlBuilder,
+      this.messageBuilder,
       Key? key})
       : super(key: key);
 
@@ -62,7 +64,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
 
   bool _alreadyCheckingImage = false;
 
-  ScannedImage? _scannedImage;
+  DetectedFace? _detectedFace;
 
   int _currentFlashMode = 0;
   final List<CameraFlashMode> _avialableFlashMode = [
@@ -197,14 +199,14 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                       fit: StackFit.expand,
                       children: <Widget>[
                         _cameraDisplayWidget(),
-                        if (_scannedImage != null) ...[
+                        if (_detectedFace != null) ...[
                           SizedBox(
                               width: cameraController.value.previewSize!.width,
                               height:
                                   cameraController.value.previewSize!.height,
                               child: CustomPaint(
                                 painter: FacePainter(
-                                    face: _scannedImage!.detectedFace,
+                                    face: _detectedFace!.face,
                                     imageSize: Size(
                                       _controller!.value.previewSize!.height,
                                       _controller!.value.previewSize!.width,
@@ -258,6 +260,9 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
     final CameraController? cameraController = _controller;
     if (cameraController != null && cameraController.value.isInitialized) {
       return CameraPreview(cameraController, child: Builder(builder: (context) {
+        if (widget.messageBuilder != null) {
+          return widget.messageBuilder!.call(context, _detectedFace);
+        }
         if (widget.message != null) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 15),
@@ -433,10 +438,10 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
         await FaceIdentifier.scanImage(
                 cameraImage: cameraImage, camera: cameraController!.description)
             .then((result) async {
+          setState(() => _detectedFace = result);
+
           if (result != null) {
             try {
-              setState(() => _scannedImage = result);
-
               if (widget.autoCapture && result.wellPositioned) {
                 _onTakePictureButtonPressed();
               }

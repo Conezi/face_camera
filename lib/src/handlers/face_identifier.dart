@@ -6,7 +6,7 @@ import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import '../models/scanned_image.dart';
 
 class FaceIdentifier {
-  static Future<ScannedImage?> scanImage(
+  static Future<DetectedFace?> scanImage(
       {required CameraImage cameraImage,
       required CameraDescription camera}) async {
     final WriteBuffer allBytes = WriteBuffer();
@@ -45,7 +45,7 @@ class FaceIdentifier {
 
     final visionImage =
         InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData);
-    ScannedImage? result;
+    DetectedFace? result;
     final face = await _detectFace(visionImage: visionImage);
     if (face != null) {
       result = face;
@@ -54,7 +54,7 @@ class FaceIdentifier {
     return result;
   }
 
-  static Future<ScannedImage?> _detectFace({required visionImage}) async {
+  static Future<DetectedFace?> _detectFace({required visionImage}) async {
     final options = FaceDetectorOptions();
     final faceDetector = FaceDetector(options: options);
     try {
@@ -112,7 +112,7 @@ class FaceIdentifier {
       }
     }
 
-    return ScannedImage(
-        wellPositioned: wellPositioned, detectedFace: detectedFace!);
+    return DetectedFace(
+        wellPositioned: wellPositioned, face: detectedFace!);
   }
 }

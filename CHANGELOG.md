@@ -1,3 +1,9 @@
+## 0.0.4
+
+- Updated dependencies.
+- Added message builder returning scanned image so developers can return message based on face position.
+
+
 ## 0.0.3
 
 - Bug fix.

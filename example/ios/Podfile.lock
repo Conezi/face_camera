@@ -1,5 +1,5 @@
 PODS:
-  - camera (0.0.1):
+  - camera_avfoundation (0.0.1):
     - Flutter
   - face_camera (0.0.1):
     - Flutter
@@ -70,7 +70,7 @@ PODS:
   - Protobuf (3.21.1)
 
 DEPENDENCIES:
-  - camera (from `.symlinks/plugins/camera/ios`)
+  - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - face_camera (from `.symlinks/plugins/face_camera/ios`)
   - Flutter (from `Flutter`)
   - google_mlkit_commons (from `.symlinks/plugins/google_mlkit_commons/ios`)
@@ -93,8 +93,8 @@ SPEC REPOS:
     - Protobuf
 
 EXTERNAL SOURCES:
-  camera:
-    :path: ".symlinks/plugins/camera/ios"
+  camera_avfoundation:
+    :path: ".symlinks/plugins/camera_avfoundation/ios"
   face_camera:
     :path: ".symlinks/plugins/face_camera/ios"
   Flutter:
@@ -105,7 +105,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_mlkit_face_detection/ios"
 
 SPEC CHECKSUMS:
-  camera: 9993f92f2c793e87b65e35f3a23c70582afb05b1
+  camera_avfoundation: 07c77549ea54ad95d8581be86617c094a46280d9
   face_camera: 9473f8c80e20d67bd2d946ed573ccee168d31186
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   google_mlkit_commons: e9070f57232c3a3e4bd42fdfa621bb1f4bb3e709
