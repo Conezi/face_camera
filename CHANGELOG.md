@@ -1,6 +1,7 @@
 ## 0.0.5
 
 - Bug fix.
+- Modified `README.md`.
 
 ## 0.0.4
 
