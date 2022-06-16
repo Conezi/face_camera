@@ -99,8 +99,8 @@ Here is a list of properties available to customize your widget:
 |orientation| CameraOrientation | use this to lock camera orientation |
 |captureControlIcon| Widget | use this to render a custom widget for capture control |
 |lensControlIcon| Widget | use this to render a custom widget for camera lens control |
-|flashControlBuilder| FlashControlBuilder | use this to build a custom widget for flash control based on camera flash mode |
-|messageBuilder| MessageBuilder | use this to build a custom messages based on face position |
+|flashControlBuilder| FlashControlBuilder | use this to build custom widgets for flash control based on camera flash mode |
+|messageBuilder| MessageBuilder | use this to build custom messages based on face position |
 
 ### Contributions
 ---  
