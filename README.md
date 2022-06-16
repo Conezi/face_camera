@@ -14,7 +14,6 @@
 First, add `face_camera` as a dependency in your pubspec.yaml file.
 
 ```yaml
-
 face_camera: ^<latest-version>
 ```
 
@@ -31,7 +30,6 @@ Add two rows to the `ios/Runner/Info.plist:`
 If editing `Info.plist` as text, add:
 
 ```
-
 <key>NSCameraUsageDescription</key>
 <string>your usage description here</string>
 <key>NSMicrophoneUsageDescription</key>
@@ -45,7 +43,6 @@ If editing `Info.plist` as text, add:
 * Change the minimum Android sdk version to 21 (or higher) in your `android/app/build.gradle` file.
 
 ```groovy
-
 minSdkVersion 21
 ```
 
