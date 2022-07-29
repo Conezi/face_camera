@@ -5,7 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import '../face_camera.dart';
-import 'handlers/emun_handler.dart';
+import 'handlers/enum_handler.dart';
 import 'handlers/face_identifier.dart';
 import 'models/scanned_image.dart';
 import 'paints/face_painter.dart';
