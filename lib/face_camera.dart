@@ -5,7 +5,7 @@ import 'package:camera/camera.dart';
 import 'src/utils/logger.dart';
 
 export 'package:face_camera/src/smart_face_camera.dart';
-export 'package:face_camera/src/res/emums.dart';
+export 'package:face_camera/src/res/enums.dart';
 
 class FaceCamera {
   //static const MethodChannel _channel = MethodChannel('face_camera');
