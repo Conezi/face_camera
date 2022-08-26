@@ -207,10 +207,18 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                               child: CustomPaint(
                                 painter: FacePainter(
                                     face: _detectedFace!.face,
-                                    imageSize: Size(
-                                      _controller!.value.previewSize!.height,
-                                      _controller!.value.previewSize!.width,
-                                    )),
+                                    imageSize:MediaQuery.of(context).size.width >
+                                          800
+                                      ? Size(
+                                          _controller!.value.previewSize!.width,
+                                          _controller!
+                                              .value.previewSize!.height,
+                                        )
+                                      : Size(
+                                          _controller!
+                                              .value.previewSize!.height,
+                                          _controller!.value.previewSize!.width,
+                                        )),
                               ))
                         ]
                       ],
