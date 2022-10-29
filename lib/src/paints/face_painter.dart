@@ -50,9 +50,9 @@ RRect _scaleRect(
     double? scaleX,
     double? scaleY}) {
   return RRect.fromLTRBR(
-      (widgetSize.width - rect.left.toDouble() * scaleX!),
+      rect.left.toDouble() * scaleX!,
       rect.top.toDouble() * scaleY!,
-      widgetSize.width - rect.right.toDouble() * scaleX,
+      rect.right.toDouble() * scaleX,
       rect.bottom.toDouble() * scaleY,
       const Radius.circular(10));
 }

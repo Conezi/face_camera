@@ -10,7 +10,7 @@ export 'package:face_camera/src/res/emums.dart';
 class FaceCamera {
   //static const MethodChannel _channel = MethodChannel('face_camera');
 
-  static late List<CameraDescription> _cameras = [];
+  static late List<CameraDescription> _cameras;
 
   /// Initialize device cameras
   static Future<void> intialize() async {

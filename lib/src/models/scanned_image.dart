@@ -1,7 +1,7 @@
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
 class DetectedFace {
-  final Face face;
+  final Face? face;
   final bool wellPositioned;
   const DetectedFace({required this.face, required this.wellPositioned});
 
