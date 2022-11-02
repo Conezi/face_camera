@@ -327,7 +327,8 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
           try {
             if (result.wellPositioned) {
               await _controller!.stopImageStream();
-              // await Future.delayed(const Duration(milliseconds: 500));
+              await Future.delayed(
+                  const Duration(milliseconds: 500)); // to capture the flash
               XFile? file = await takePicture();
               await widget.onCapture(File(file!.path), _detectedFace?.face);
               _startImageStream();
