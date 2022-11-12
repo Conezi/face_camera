@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:lottie/lottie.dart';
 import 'package:native_device_orientation/native_device_orientation.dart';
@@ -23,7 +24,7 @@ class SmartFaceCamera extends StatefulWidget {
   final bool showCameraLensControl;
   final String? message;
   final TextStyle messageStyle;
-  final Future Function(File? image, Face? face) onCapture;
+  final Future Function(CameraImage? image, Face? face) onCapture;
   final Widget? captureControlIcon;
   final Widget? lensControlIcon;
   final MessageBuilder? messageBuilder;
@@ -100,11 +101,20 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
     _startImageStream();
   }
 
+  // ignore: prefer_typing_uninitialized_variables
+  var lottieComosition;
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     _initCamera();
+    _loadComposition();
     super.initState();
+  }
+
+  Future _loadComposition() async {
+    var assetData = await rootBundle.load('assets/raw/faceRec.json');
+    lottieComosition = await LottieComposition.fromByteData(assetData);
+    return;
   }
 
   @override
@@ -164,6 +174,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                             child: CustomPaint(
                               painter: FacePainter(
                                   face: _detectedFace!.face,
+                                  composition: lottieComosition,
                                   imageSize: MediaQuery.of(context).size.width >
                                           800
                                       ? Size(
@@ -329,8 +340,8 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
               await _controller!.stopImageStream();
               await Future.delayed(
                   const Duration(milliseconds: 500)); // to capture the flash
-              XFile? file = await takePicture();
-              await widget.onCapture(File(file!.path), _detectedFace?.face);
+              // XFile? file = await takePicture();
+              await widget.onCapture(cameraImage, _detectedFace?.face);
               _startImageStream();
             }
           } catch (e) {
