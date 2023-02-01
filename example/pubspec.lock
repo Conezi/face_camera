@@ -21,35 +21,35 @@ packages:
       name: camera
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.8+1"
+    version: "0.10.3"
   camera_android:
     dependency: transitive
     description:
       name: camera_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.7+1"
+    version: "0.10.3"
   camera_avfoundation:
     dependency: transitive
     description:
       name: camera_avfoundation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.7+1"
+    version: "0.9.11"
   camera_platform_interface:
     dependency: transitive
     description:
       name: camera_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.4"
   camera_web:
     dependency: transitive
     description:
       name: camera_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.1+6"
+    version: "0.3.1+1"
   characters:
     dependency: transitive
     description:
@@ -91,7 +91,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.5"
+    version: "0.0.6"
   fake_async:
     dependency: transitive
     description:
@@ -141,7 +141,7 @@ packages:
       name: google_mlkit_face_detection
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0"
+    version: "0.5.0"
   js:
     dependency: transitive
     description:
@@ -260,5 +260,5 @@ packages:
     source: hosted
     version: "2.1.2"
 sdks:
-  dart: ">=2.17.0-0 <3.0.0"
-  flutter: ">=2.8.0"
+  dart: ">=2.18.4 <3.0.0"
+  flutter: ">=3.0.0"

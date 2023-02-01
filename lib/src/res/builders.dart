@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../face_camera.dart';
-import '../models/scanned_image.dart';
 
 /// Returns widget for flash modes
 typedef FlashControlBuilder = Widget Function(

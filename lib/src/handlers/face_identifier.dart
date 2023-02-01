@@ -3,7 +3,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
-import '../models/scanned_image.dart';
+import '../models/detected_image.dart';
 
 class FaceIdentifier {
   static Future<DetectedFace?> scanImage(
@@ -112,6 +112,6 @@ class FaceIdentifier {
       }
     }
 
-    return DetectedFace(wellPositioned: wellPositioned, face: detectedFace!);
+    return DetectedFace(wellPositioned: wellPositioned, face: detectedFace);
   }
 }
