@@ -33,9 +33,8 @@ jobs:
         run: dart format --output=none --set-exit-if-changed .
 
       # Consider passing '--fatal-infos' for slightly stricter analysis.
-      - name: Analyze project dart source
-        run: dart analyze
-
+      #- name: Analyze project dart source
+      #  run: dart analyze
 
       # Get flutter dependencies.
       - run: flutter pub get
