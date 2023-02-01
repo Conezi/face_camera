@@ -7,7 +7,7 @@ import 'package:face_camera/face_camera.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await FaceCamera.intialize();
+  await FaceCamera.initialize();
 
   runApp(const MyApp());
 }
@@ -57,6 +57,9 @@ class _MyAppState extends State<MyApp> {
                 defaultCameraLens: CameraLens.front,
                 onCapture: (File? image) {
                   setState(() => _capturedImage = image);
+                },
+                onFaceDetected: (Face? face) {
+                  //Do something
                 },
                 messageBuilder: (context, face) {
                   if (face == null) {

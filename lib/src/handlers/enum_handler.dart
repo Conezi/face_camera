@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 
-import '../res/emums.dart';
+import '../res/enums.dart';
 
 class EnumHandler {
   static ResolutionPreset imageResolutionToResolutionPreset(

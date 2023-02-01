@@ -5,9 +5,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import '../face_camera.dart';
-import 'handlers/emun_handler.dart';
+import 'handlers/enum_handler.dart';
 import 'handlers/face_identifier.dart';
-import 'models/scanned_image.dart';
 import 'paints/face_painter.dart';
 import 'paints/hole_painter.dart';
 import 'res/builders.dart';
@@ -27,6 +26,7 @@ class SmartFaceCamera extends StatefulWidget {
   final TextStyle messageStyle;
   final CameraOrientation? orientation;
   final void Function(File? image) onCapture;
+  final void Function(Face? face)? onFaceDetected;
   final Widget? captureControlIcon;
   final Widget? lensControlIcon;
   final FlashControlBuilder? flashControlBuilder;
@@ -47,6 +47,7 @@ class SmartFaceCamera extends StatefulWidget {
       this.messageStyle = const TextStyle(
           fontSize: 14, height: 1.5, fontWeight: FontWeight.w400),
       required this.onCapture,
+      this.onFaceDetected,
       this.captureControlIcon,
       this.lensControlIcon,
       this.flashControlBuilder,
@@ -55,7 +56,7 @@ class SmartFaceCamera extends StatefulWidget {
       : super(key: key);
 
   @override
-  _SmartFaceCameraState createState() => _SmartFaceCameraState();
+  State<SmartFaceCamera> createState() => _SmartFaceCameraState();
 }
 
 class _SmartFaceCameraState extends State<SmartFaceCamera>
@@ -67,27 +68,27 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
   DetectedFace? _detectedFace;
 
   int _currentFlashMode = 0;
-  final List<CameraFlashMode> _avialableFlashMode = [
+  final List<CameraFlashMode> _availableFlashMode = [
     CameraFlashMode.off,
     CameraFlashMode.auto,
     CameraFlashMode.always
   ];
 
   int _currentCameraLens = 0;
-  final List<CameraLens> _avaliableCameraLens = [];
+  final List<CameraLens> _availableCameraLens = [];
 
-  void _getAllAvialableCameraLens() {
+  void _getAllAvailableCameraLens() {
     for (CameraDescription d in FaceCamera.cameras) {
       final lens = EnumHandler.cameraLensDirectionToCameraLens(d.lensDirection);
-      if (lens != null && !_avaliableCameraLens.contains(lens)) {
-        _avaliableCameraLens.add(lens);
+      if (lens != null && !_availableCameraLens.contains(lens)) {
+        _availableCameraLens.add(lens);
       }
     }
 
     if (widget.defaultCameraLens != null) {
       try {
         _currentCameraLens =
-            _avaliableCameraLens.indexOf(widget.defaultCameraLens!);
+            _availableCameraLens.indexOf(widget.defaultCameraLens!);
       } catch (e) {
         logError(e.toString());
       }
@@ -99,7 +100,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
         .where((c) =>
             c.lensDirection ==
             EnumHandler.cameraLensToCameraLensDirection(
-                _avaliableCameraLens[_currentCameraLens]))
+                _availableCameraLens[_currentCameraLens]))
         .toList();
 
     if (cameras.isNotEmpty) {
@@ -116,7 +117,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
       });
 
       await _changeFlashMode(
-          _avialableFlashMode.indexOf(widget.defaultFlashMode));
+          _availableFlashMode.indexOf(widget.defaultFlashMode));
 
       await _controller!
           .lockCaptureOrientation(
@@ -133,7 +134,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
   Future<void> _changeFlashMode(int index) async {
     await _controller!
         .setFlashMode(
-            EnumHandler.cameraFlashModeToFlashMode(_avialableFlashMode[index]))
+            EnumHandler.cameraFlashModeToFlashMode(_availableFlashMode[index]))
         .then((_) {
       if (mounted) setState(() => _currentFlashMode = index);
     });
@@ -142,7 +143,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    _getAllAvialableCameraLens();
+    _getAllAvailableCameraLens();
     _initCamera();
     super.initState();
   }
@@ -301,16 +302,16 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
     final CameraController? cameraController = _controller;
 
     final icon =
-        _avialableFlashMode[_currentFlashMode] == CameraFlashMode.always
+        _availableFlashMode[_currentFlashMode] == CameraFlashMode.always
             ? Icons.flash_on
-            : _avialableFlashMode[_currentFlashMode] == CameraFlashMode.off
+            : _availableFlashMode[_currentFlashMode] == CameraFlashMode.off
                 ? Icons.flash_off
                 : Icons.flash_auto;
 
     return IconButton(
       iconSize: 38,
       icon: widget.flashControlBuilder
-              ?.call(context, _avialableFlashMode[_currentFlashMode]) ??
+              ?.call(context, _availableFlashMode[_currentFlashMode]) ??
           CircleAvatar(
               radius: 38,
               child: Padding(
@@ -320,7 +321,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
       onPressed:
           cameraController != null && cameraController.value.isInitialized
               ? () => _changeFlashMode(
-                  (_currentFlashMode + 1) % _avialableFlashMode.length)
+                  (_currentFlashMode + 1) % _availableFlashMode.length)
               : null,
     );
   }
@@ -342,7 +343,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
             cameraController != null && cameraController.value.isInitialized
                 ? () {
                     _currentCameraLens =
-                        (_currentCameraLens + 1) % _avaliableCameraLens.length;
+                        (_currentCameraLens + 1) % _availableCameraLens.length;
                     _initCamera();
                   }
                 : null);
@@ -377,10 +378,11 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
         await Future.delayed(const Duration(milliseconds: 500));
         takePicture().then((XFile? file) {
           /// Return image callback
-          widget.onCapture(File(file!.path));
+          if (file != null) {
+            widget.onCapture(File(file.path));
+          }
 
           /// Resume image stream after 2 seconds of capture
-
           Future.delayed(const Duration(seconds: 2)).whenComplete(() {
             if (mounted && cameraController.value.isInitialized) {
               try {
@@ -442,8 +444,13 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
 
           if (result != null) {
             try {
-              if (widget.autoCapture && result.wellPositioned) {
-                _onTakePictureButtonPressed();
+              if (result.wellPositioned) {
+                if (widget.onFaceDetected != null) {
+                  widget.onFaceDetected!.call(result.face);
+                }
+                if (widget.autoCapture) {
+                  _onTakePictureButtonPressed();
+                }
               }
             } catch (e) {
               logError(e.toString());
