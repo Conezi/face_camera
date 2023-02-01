@@ -10,22 +10,43 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Setup Java environment in order to build the Android app.
-      - uses: actions/checkout@v1
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v2
         with:
+          distribution: 'zulu'
           java-version: '12.x'
-         
+          java-package: jdk
+
       # Setup the flutter environment.
-      - uses: subosito/flutter-action@v1
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'stable' # 'dev', 'alpha', default to: 'stable'
-          flutter-version: '3.0.1' # you can also specify exact version of flutter
+          flutter-version: '3.3.10' # you can also specify exact version of flutter
+
+      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+
+      - name: Install dependencies
+        run: dart pub get
+
+      # Uncomment this step to verify the use of 'dart format' on each commit.
+      - name: Verify dart formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      # Consider passing '--fatal-infos' for slightly stricter analysis.
+      - name: Analyze project dart source
+        run: dart analyze
+
 
       # Get flutter dependencies.
       - run: flutter pub get
 
-      # Statically analyze the Dart code for any errors.
-      - run: flutter analyze .
+      # Uncomment this step to verify the use of 'flutter format' on each commit.
+      - name: Verify flutter formatting
+        run: flutter format --set-exit-if-changed .
 
-      # Run widget tests for our flutter project.
+      # Statically analyze the Dart code for any errors.
+      - name: Analyze project flutter source
+        run: flutter analyze .
+
+      # Run tests for our flutter project.
       - run: flutter test
