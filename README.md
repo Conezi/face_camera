@@ -55,7 +55,7 @@ minSdkVersion 21
 void main() async{
   WidgetsFlutterBinding.ensureInitialized(); //Add this
 
-  await FaceCamera.intialize(); //Add this
+  await FaceCamera.initialize(); //Add this
 
   runApp(const MyApp());
 }
