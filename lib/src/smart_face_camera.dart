@@ -107,7 +107,9 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
       _controller = CameraController(cameras.first,
           EnumHandler.imageResolutionToResolutionPreset(widget.imageResolution),
           enableAudio: widget.enableAudio,
-          imageFormatGroup: Platform.isAndroid ? ImageFormatGroup.nv21 : ImageFormatGroup.bgra8888);
+          imageFormatGroup: Platform.isAndroid
+              ? ImageFormatGroup.nv21
+              : ImageFormatGroup.bgra8888);
 
       await _controller!.initialize().then((_) {
         if (!mounted) {
