@@ -1,6 +1,12 @@
+## 0.0.7
+
+- Fixed Android face detection issue.
+- Updated dependencies.
+- Modified `README.md`.
+
 ## 0.0.6
 
-- Added onFaceDetected callback
+- Added onFaceDetected callback.
 - Updates code for stricter lint checks.
 - Updated dependencies.
 - Modified `README.md`.
