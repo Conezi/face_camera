@@ -32,6 +32,8 @@ If editing `Info.plist` as text, add:
 ```
 <key>NSCameraUsageDescription</key>
 <string>your usage description here</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>your usage description here</string>
 ```
 
 
