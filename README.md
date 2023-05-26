@@ -25,7 +25,7 @@ face_camera: ^<latest-version>
 
 Add two rows to the `ios/Runner/Info.plist:`
 * one with the key `Privacy - Camera Usage Description` and a usage description.
-* and one with the `key Privacy - Microphone Usage Description` and a usage description.
+* and one with the key `Privacy - Microphone Usage Description` and a usage description.
 
 If editing `Info.plist` as text, add:
 
