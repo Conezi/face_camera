@@ -23,7 +23,9 @@ face_camera: ^<latest-version>
 * Minimum iOS Deployment Target: 11.0
 * Follow this <a href="https://github.com/bharat-biradar/Google-Ml-Kit-plugin#requirements">link</a> and setup  `ML Kit` this is required for `face_camera` to function properly on `iOS`
 
-Add a row with the key `Privacy - Camera Usage Description` and a usage description to the `ios/Runner/Info.plist:`
+Add two rows to the `ios/Runner/Info.plist:`
+* one with the key `Privacy - Camera Usage Description` and a usage description.
+* and one with the `key Privacy - Microphone Usage Description` and a usage description.
 
 If editing `Info.plist` as text, add:
 
