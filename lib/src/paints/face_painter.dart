@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
+
+import '../../face_camera.dart';
+import '../res/app_images.dart';
 
 class FacePainter extends CustomPainter {
-  FacePainter({required this.imageSize, this.face});
+  FacePainter(
+      {required this.imageSize,
+      this.face,
+      required this.detectorShape,
+      this.detectorImage});
   final Size imageSize;
   double? scaleX, scaleY;
-  Face? face;
+  final Face? face;
+  final DetectorShape detectorShape;
+  final String? detectorImage;
   @override
   void paint(Canvas canvas, Size size) {
     if (face == null) return;
@@ -27,14 +35,73 @@ class FacePainter extends CustomPainter {
     scaleX = size.width / imageSize.width;
     scaleY = size.height / imageSize.height;
 
-    canvas.drawRRect(
-        _scaleRect(
-            rect: face!.boundingBox,
-            imageSize: imageSize,
-            widgetSize: size,
-            scaleX: scaleX!,
-            scaleY: scaleY!),
-        paint);
+    switch (detectorShape) {
+      case DetectorShape.defaultShape:
+        canvas.drawPath(
+          _defaultPath(
+              rect: face!.boundingBox,
+              widgetSize: size,
+              scaleX: scaleX,
+              scaleY: scaleY),
+          paint, // Adjust color as needed
+        );
+        break;
+      case DetectorShape.square:
+        canvas.drawRRect(
+            _scaleRect(
+                rect: face!.boundingBox,
+                widgetSize: size,
+                scaleX: scaleX,
+                scaleY: scaleY),
+            paint);
+        break;
+      case DetectorShape.circle:
+        canvas.drawCircle(
+          _circleOffset(
+              rect: face!.boundingBox,
+              widgetSize: size,
+              scaleX: scaleX,
+              scaleY: scaleY),
+          face!.boundingBox.width / 2 * scaleX!,
+          paint, // Adjust color as needed
+        );
+        break;
+      case DetectorShape.triangle:
+      case DetectorShape.triangleInverted:
+        canvas.drawPath(
+          _trianglePath(
+              rect: face!.boundingBox,
+              widgetSize: size,
+              scaleX: scaleX,
+              scaleY: scaleY,
+              isInverted: detectorShape == DetectorShape.triangleInverted),
+          paint, // Adjust color as needed
+        );
+        break;
+      case DetectorShape.image:
+        final AssetImage image = AssetImage(detectorImage ?? AppImages.faceNet);
+        final ImageStream imageStream = image.resolve(ImageConfiguration.empty);
+
+        imageStream.addListener(
+            ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) {
+          final rect = face!.boundingBox;
+          final Rect destinationRect = Rect.fromPoints(
+            Offset(size.width - rect.left.toDouble() * scaleX!,
+                rect.top.toDouble() * scaleY!),
+            Offset(size.width - rect.right.toDouble() * scaleX!,
+                rect.bottom.toDouble() * scaleY!),
+          );
+
+          canvas.drawImageRect(
+            imageInfo.image,
+            Rect.fromLTRB(0, 0, imageInfo.image.width.toDouble(),
+                imageInfo.image.height.toDouble()),
+            destinationRect,
+            Paint(),
+          );
+        }));
+        break;
+    }
   }
 
   @override
@@ -43,9 +110,35 @@ class FacePainter extends CustomPainter {
   }
 }
 
+Path _defaultPath(
+    {required Rect rect,
+    required Size widgetSize,
+    double? scaleX,
+    double? scaleY}) {
+  double cornerExtension =
+      30.0; // Adjust the length of the corner extensions as needed
+
+  double left = widgetSize.width - rect.left.toDouble() * scaleX!;
+  double right = widgetSize.width - rect.right.toDouble() * scaleX;
+  double top = rect.top.toDouble() * scaleY!;
+  double bottom = rect.bottom.toDouble() * scaleY;
+  return Path()
+    ..moveTo(left - cornerExtension, top)
+    ..lineTo(left, top)
+    ..lineTo(left, top + cornerExtension)
+    ..moveTo(right + cornerExtension, top)
+    ..lineTo(right, top)
+    ..lineTo(right, top + cornerExtension)
+    ..moveTo(left - cornerExtension, bottom)
+    ..lineTo(left, bottom)
+    ..lineTo(left, bottom - cornerExtension)
+    ..moveTo(right + cornerExtension, bottom)
+    ..lineTo(right, bottom)
+    ..lineTo(right, bottom - cornerExtension);
+}
+
 RRect _scaleRect(
     {required Rect rect,
-    required Size imageSize,
     required Size widgetSize,
     double? scaleX,
     double? scaleY}) {
@@ -55,4 +148,41 @@ RRect _scaleRect(
       widgetSize.width - rect.right.toDouble() * scaleX,
       rect.bottom.toDouble() * scaleY,
       const Radius.circular(10));
+}
+
+Offset _circleOffset(
+    {required Rect rect,
+    required Size widgetSize,
+    double? scaleX,
+    double? scaleY}) {
+  return Offset(
+    (widgetSize.width - rect.center.dx * scaleX!),
+    rect.center.dy * scaleY!,
+  );
+}
+
+Path _trianglePath(
+    {required Rect rect,
+    required Size widgetSize,
+    double? scaleX,
+    double? scaleY,
+    bool isInverted = false}) {
+  if (isInverted) {
+    return Path()
+      ..moveTo(widgetSize.width - rect.center.dx * scaleX!,
+          rect.bottom.toDouble() * scaleY!)
+      ..lineTo(widgetSize.width - rect.left.toDouble() * scaleX,
+          rect.top.toDouble() * scaleY)
+      ..lineTo(widgetSize.width - rect.right.toDouble() * scaleX,
+          rect.top.toDouble() * scaleY)
+      ..close();
+  }
+  return Path()
+    ..moveTo(widgetSize.width - rect.center.dx * scaleX!,
+        rect.top.toDouble() * scaleY!)
+    ..lineTo(widgetSize.width - rect.left.toDouble() * scaleX,
+        rect.bottom.toDouble() * scaleY)
+    ..lineTo(widgetSize.width - rect.right.toDouble() * scaleX,
+        rect.bottom.toDouble() * scaleY)
+    ..close();
 }

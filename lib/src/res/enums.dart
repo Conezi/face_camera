@@ -66,3 +66,12 @@ enum CameraOrientation {
   /// The orientation that is 90 degrees counterclockwise from [portraitUp].
   landscapeRight,
 }
+
+enum DetectorShape {
+  defaultShape,
+  square,
+  circle,
+  triangle,
+  triangleInverted,
+  image
+}

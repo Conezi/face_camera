@@ -31,6 +31,9 @@ class SmartFaceCamera extends StatefulWidget {
   final Widget? lensControlIcon;
   final FlashControlBuilder? flashControlBuilder;
   final MessageBuilder? messageBuilder;
+  final DetectorShape detectorShape;
+  final String? detectorImage;
+  final DetectorBuilder? detectorBuilder;
 
   const SmartFaceCamera(
       {this.imageResolution = ImageResolution.medium,
@@ -52,6 +55,9 @@ class SmartFaceCamera extends StatefulWidget {
       this.lensControlIcon,
       this.flashControlBuilder,
       this.messageBuilder,
+      this.detectorShape = DetectorShape.defaultShape,
+      this.detectorImage,
+      this.detectorBuilder,
       Key? key})
       : super(key: key);
 
@@ -207,14 +213,21 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                               width: cameraController.value.previewSize!.width,
                               height:
                                   cameraController.value.previewSize!.height,
-                              child: CustomPaint(
-                                painter: FacePainter(
-                                    face: _detectedFace!.face,
-                                    imageSize: Size(
-                                      _controller!.value.previewSize!.height,
-                                      _controller!.value.previewSize!.width,
-                                    )),
-                              ))
+                              child: widget.detectorBuilder?.call(
+                                      context, _detectedFace, Size(
+                                _controller!.value.previewSize!.height,
+                                _controller!.value.previewSize!.width,
+                              )) ??
+                                  CustomPaint(
+                                    painter: FacePainter(
+                                        face: _detectedFace!.face,
+                                        detectorShape: widget.detectorShape,
+                                        detectorImage: widget.detectorImage,
+                                        imageSize: Size(
+                                          _controller!.value.previewSize!.height,
+                                          _controller!.value.previewSize!.width,
+                                        )),
+                                  ))
                         ]
                       ],
                     ),

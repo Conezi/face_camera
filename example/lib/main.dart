@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
-            title: const Text('FaceCapture example app'),
+            title: const Text('FaceCamera example app'),
           ),
           body: Builder(builder: (context) {
             if (_capturedImage != null) {

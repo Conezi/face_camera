@@ -9,3 +9,7 @@ typedef FlashControlBuilder = Widget Function(
 /// Returns message based on face position
 typedef MessageBuilder = Widget Function(
     BuildContext context, DetectedFace? detectedFace);
+
+/// Returns widget for detector
+typedef DetectorBuilder = Widget Function(
+    BuildContext context, DetectedFace? detectedFace, Size? imageSize);
