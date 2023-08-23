@@ -67,6 +67,7 @@ enum CameraOrientation {
   landscapeRight,
 }
 
+/// Face indicator shapes
 enum IndicatorShape {
   defaultShape,
   square,
