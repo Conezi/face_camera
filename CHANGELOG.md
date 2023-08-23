@@ -1,3 +1,10 @@
+## 0.0.8
+
+- Added indicatorShapes and indicatorAssetImage parameters so developers can choose desired face indicator.
+- Added indicatorBuilder returning detected face and image size so developers can return their desired face indicator.
+- Updated dependencies.
+- Modified `README.md`.
+
 ## 0.0.7
 
 - Fixed Android face detection issue.

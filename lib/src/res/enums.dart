@@ -67,7 +67,7 @@ enum CameraOrientation {
   landscapeRight,
 }
 
-enum DetectorShape {
+enum IndicatorShape {
   defaultShape,
   square,
   circle,

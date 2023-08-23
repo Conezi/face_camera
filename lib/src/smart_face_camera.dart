@@ -31,9 +31,9 @@ class SmartFaceCamera extends StatefulWidget {
   final Widget? lensControlIcon;
   final FlashControlBuilder? flashControlBuilder;
   final MessageBuilder? messageBuilder;
-  final DetectorShape detectorShape;
-  final String? detectorImage;
-  final DetectorBuilder? detectorBuilder;
+  final IndicatorShape indicatorShape;
+  final String? indicatorAssetImage;
+  final IndicatorBuilder? indicatorBuilder;
 
   const SmartFaceCamera(
       {this.imageResolution = ImageResolution.medium,
@@ -55,12 +55,12 @@ class SmartFaceCamera extends StatefulWidget {
       this.lensControlIcon,
       this.flashControlBuilder,
       this.messageBuilder,
-      this.detectorShape = DetectorShape.defaultShape,
-      this.detectorImage,
-      this.detectorBuilder,
+      this.indicatorShape = IndicatorShape.defaultShape,
+      this.indicatorAssetImage,
+      this.indicatorBuilder,
       Key? key})
-      : assert(detectorShape != DetectorShape.image || detectorImage != null,
-            'DetectorImage must be provided for detectorShape image.'),
+      : assert(indicatorShape != IndicatorShape.image || indicatorAssetImage != null,
+            'IndicatorAssetImage must be provided when IndicatorShape is set to image.'),
         super(key: key);
 
   @override
@@ -215,7 +215,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                               width: cameraController.value.previewSize!.width,
                               height:
                                   cameraController.value.previewSize!.height,
-                              child: widget.detectorBuilder?.call(
+                              child: widget.indicatorBuilder?.call(
                                       context,
                                       _detectedFace,
                                       Size(
@@ -225,8 +225,8 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                                   CustomPaint(
                                     painter: FacePainter(
                                         face: _detectedFace!.face,
-                                        detectorShape: widget.detectorShape,
-                                        detectorImage: widget.detectorImage,
+                                        indicatorShape: widget.indicatorShape,
+                                        indicatorAssetImage: widget.indicatorAssetImage,
                                         imageSize: Size(
                                           _controller!
                                               .value.previewSize!.height,

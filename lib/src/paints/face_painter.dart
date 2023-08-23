@@ -7,13 +7,13 @@ class FacePainter extends CustomPainter {
   FacePainter(
       {required this.imageSize,
       this.face,
-      required this.detectorShape,
-      this.detectorImage});
+      required this.indicatorShape,
+      this.indicatorAssetImage});
   final Size imageSize;
   double? scaleX, scaleY;
   final Face? face;
-  final DetectorShape detectorShape;
-  final String? detectorImage;
+  final IndicatorShape indicatorShape;
+  final String? indicatorAssetImage;
   @override
   void paint(Canvas canvas, Size size) {
     if (face == null) return;
@@ -35,8 +35,8 @@ class FacePainter extends CustomPainter {
     scaleX = size.width / imageSize.width;
     scaleY = size.height / imageSize.height;
 
-    switch (detectorShape) {
-      case DetectorShape.defaultShape:
+    switch (indicatorShape) {
+      case IndicatorShape.defaultShape:
         canvas.drawPath(
           _defaultPath(
               rect: face!.boundingBox,
@@ -46,7 +46,7 @@ class FacePainter extends CustomPainter {
           paint, // Adjust color as needed
         );
         break;
-      case DetectorShape.square:
+      case IndicatorShape.square:
         canvas.drawRRect(
             _scaleRect(
                 rect: face!.boundingBox,
@@ -55,7 +55,7 @@ class FacePainter extends CustomPainter {
                 scaleY: scaleY),
             paint);
         break;
-      case DetectorShape.circle:
+      case IndicatorShape.circle:
         canvas.drawCircle(
           _circleOffset(
               rect: face!.boundingBox,
@@ -66,20 +66,20 @@ class FacePainter extends CustomPainter {
           paint, // Adjust color as needed
         );
         break;
-      case DetectorShape.triangle:
-      case DetectorShape.triangleInverted:
+      case IndicatorShape.triangle:
+      case IndicatorShape.triangleInverted:
         canvas.drawPath(
           _trianglePath(
               rect: face!.boundingBox,
               widgetSize: size,
               scaleX: scaleX,
               scaleY: scaleY,
-              isInverted: detectorShape == DetectorShape.triangleInverted),
+              isInverted: indicatorShape == IndicatorShape.triangleInverted),
           paint, // Adjust color as needed
         );
         break;
-      case DetectorShape.image:
-        final AssetImage image = AssetImage(detectorImage ?? AppImages.faceNet);
+      case IndicatorShape.image:
+        final AssetImage image = AssetImage(indicatorAssetImage ?? AppImages.faceNet);
         final ImageStream imageStream = image.resolve(ImageConfiguration.empty);
 
         imageStream.addListener(

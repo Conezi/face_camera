@@ -11,5 +11,5 @@ typedef MessageBuilder = Widget Function(
     BuildContext context, DetectedFace? detectedFace);
 
 /// Returns widget for detector
-typedef DetectorBuilder = Widget Function(
+typedef IndicatorBuilder = Widget Function(
     BuildContext context, DetectedFace? detectedFace, Size? imageSize);
