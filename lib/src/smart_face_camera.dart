@@ -59,7 +59,9 @@ class SmartFaceCamera extends StatefulWidget {
       this.detectorImage,
       this.detectorBuilder,
       Key? key})
-      : super(key: key);
+      : assert(detectorShape == DetectorShape.image && detectorImage == null,
+            'DetectorImage must be provided for detectorShape image.'),
+        super(key: key);
 
   @override
   State<SmartFaceCamera> createState() => _SmartFaceCameraState();
@@ -214,17 +216,20 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                               height:
                                   cameraController.value.previewSize!.height,
                               child: widget.detectorBuilder?.call(
-                                      context, _detectedFace, Size(
-                                _controller!.value.previewSize!.height,
-                                _controller!.value.previewSize!.width,
-                              )) ??
+                                      context,
+                                      _detectedFace,
+                                      Size(
+                                        _controller!.value.previewSize!.height,
+                                        _controller!.value.previewSize!.width,
+                                      )) ??
                                   CustomPaint(
                                     painter: FacePainter(
                                         face: _detectedFace!.face,
                                         detectorShape: widget.detectorShape,
                                         detectorImage: widget.detectorImage,
                                         imageSize: Size(
-                                          _controller!.value.previewSize!.height,
+                                          _controller!
+                                              .value.previewSize!.height,
                                           _controller!.value.previewSize!.width,
                                         )),
                                   ))
