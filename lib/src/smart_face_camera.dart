@@ -59,7 +59,7 @@ class SmartFaceCamera extends StatefulWidget {
       this.detectorImage,
       this.detectorBuilder,
       Key? key})
-      : assert(detectorShape == DetectorShape.image && detectorImage == null,
+      : assert(detectorShape != DetectorShape.image || detectorImage != null,
             'DetectorImage must be provided for detectorShape image.'),
         super(key: key);
 
