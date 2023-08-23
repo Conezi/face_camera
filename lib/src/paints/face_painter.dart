@@ -79,7 +79,8 @@ class FacePainter extends CustomPainter {
         );
         break;
       case IndicatorShape.image:
-        final AssetImage image = AssetImage(indicatorAssetImage ?? AppImages.faceNet);
+        final AssetImage image =
+            AssetImage(indicatorAssetImage ?? AppImages.faceNet);
         final ImageStream imageStream = image.resolve(ImageConfiguration.empty);
 
         imageStream.addListener(

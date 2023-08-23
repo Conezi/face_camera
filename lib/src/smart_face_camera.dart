@@ -59,7 +59,9 @@ class SmartFaceCamera extends StatefulWidget {
       this.indicatorAssetImage,
       this.indicatorBuilder,
       Key? key})
-      : assert(indicatorShape != IndicatorShape.image || indicatorAssetImage != null,
+      : assert(
+            indicatorShape != IndicatorShape.image ||
+                indicatorAssetImage != null,
             'IndicatorAssetImage must be provided when IndicatorShape is set to image.'),
         super(key: key);
 
@@ -226,7 +228,8 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                                     painter: FacePainter(
                                         face: _detectedFace!.face,
                                         indicatorShape: widget.indicatorShape,
-                                        indicatorAssetImage: widget.indicatorAssetImage,
+                                        indicatorAssetImage:
+                                            widget.indicatorAssetImage,
                                         imageSize: Size(
                                           _controller!
                                               .value.previewSize!.height,
