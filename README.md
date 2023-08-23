@@ -103,7 +103,7 @@ Here is a list of properties available to customize your widget:
 | flashControlBuilder   | FlashControlBuilder     | use this to build custom widgets for flash control based on camera flash mode |
 | messageBuilder        | MessageBuilder          | use this to build custom messages based on face position                      |
 | indicatorShape        | IndicatorShape          | use this to change the shape of the face indicator                            |
-| indicatorAssetImage   | String                  | use this to pass asset image when IndicatorShape is set to image              |
+| indicatorAssetImage   | String                  | use this to pass an asset image when IndicatorShape is set to image           |
 | indicatorBuilder      | IndicatorBuilder        | use this to build custom widgets for the face indicator                       |
 
 ### Contributions
