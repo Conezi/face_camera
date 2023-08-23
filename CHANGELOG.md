@@ -1,7 +1,7 @@
 ## 0.0.8
 
-- Added indicatorShapes and indicatorAssetImage parameters so developers can choose desired face indicator.
-- Added indicatorBuilder returning detected face and image size so developers can return their desired face indicator.
+- Added indicatorShapes and indicatorAssetImage parameters so that developers can choose their desired face indicator.
+- Added indicatorBuilder returning detected face and image size so that developers can build a custom face indicator.
 - Updated dependencies.
 - Modified `README.md`.
 
