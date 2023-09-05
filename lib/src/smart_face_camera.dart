@@ -180,11 +180,18 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
     if (cameraController == null || !cameraController.value.isInitialized) {
       return;
     }
-
     if (state == AppLifecycleState.inactive) {
-      cameraController.stopImageStream();
+      // App screen turned off
+      if (cameraController.value.isStreamingImages) {
+        // Stop stream only If it's streaming
+        cameraController.stopImageStream();
+      }
+    } else if (state == AppLifecycleState.paused) {
     } else if (state == AppLifecycleState.resumed) {
-      _startImageStream();
+      // Start stream only If it's not streaming
+      if (!cameraController.value.isStreamingImages) {
+        _startImageStream();
+      }
     }
   }
 
