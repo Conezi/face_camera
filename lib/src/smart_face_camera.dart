@@ -182,9 +182,13 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
     }
 
     if (state == AppLifecycleState.inactive) {
-      cameraController.stopImageStream();
+      if (cameraController.value.isStreamingImages) {
+        cameraController.stopImageStream();
+      }
     } else if (state == AppLifecycleState.resumed) {
-      _startImageStream();
+      if (!cameraController.value.isStreamingImages) {
+        _startImageStream();
+      }
     }
   }
 
