@@ -1,6 +1,7 @@
 ## 0.0.9
 
 - Added captureControlBuilder returning detected face so that developers can build a custom capture control icon.
+- Enhanced performance.
 - Updated dependencies.
 - Modified `README.md`.
 
