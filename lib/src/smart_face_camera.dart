@@ -465,7 +465,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
       _alreadyCheckingImage = true;
       try {
         await FaceIdentifier.scanImage(
-                cameraImage: cameraImage, camera: cameraController!.description)
+                cameraImage: cameraImage, controller: cameraController)
             .then((result) async {
           setState(() => _detectedFace = result);
 
