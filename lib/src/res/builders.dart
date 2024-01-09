@@ -13,3 +13,7 @@ typedef MessageBuilder = Widget Function(
 /// Returns widget for detector
 typedef IndicatorBuilder = Widget Function(
     BuildContext context, DetectedFace? detectedFace, Size? imageSize);
+
+/// Returns widget for capture control
+typedef CaptureControlBuilder = Widget Function(
+    BuildContext context, DetectedFace? detectedFace);

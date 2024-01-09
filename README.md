@@ -105,6 +105,7 @@ Here is a list of properties available to customize your widget:
 | indicatorShape        | IndicatorShape          | use this to change the shape of the face indicator                            |
 | indicatorAssetImage   | String                  | use this to pass an asset image when IndicatorShape is set to image           |
 | indicatorBuilder      | IndicatorBuilder        | use this to build custom widgets for the face indicator                       |
+| captureControlBuilder | CaptureControlBuilder   | use this to build custom widgets for capture control                          |
 
 ### Contributions
 ---  

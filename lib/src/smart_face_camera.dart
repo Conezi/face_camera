@@ -28,6 +28,7 @@ class SmartFaceCamera extends StatefulWidget {
   final void Function(File? image) onCapture;
   final void Function(Face? face)? onFaceDetected;
   final Widget? captureControlIcon;
+  final CaptureControlBuilder? captureControlBuilder;
   final Widget? lensControlIcon;
   final FlashControlBuilder? flashControlBuilder;
   final MessageBuilder? messageBuilder;
@@ -51,7 +52,8 @@ class SmartFaceCamera extends StatefulWidget {
           fontSize: 14, height: 1.5, fontWeight: FontWeight.w400),
       required this.onCapture,
       this.onFaceDetected,
-      this.captureControlIcon,
+      @Deprecated('Use [captureControlBuilder]') this.captureControlIcon,
+      this.captureControlBuilder,
       this.lensControlIcon,
       this.flashControlBuilder,
       this.messageBuilder,
@@ -309,10 +311,10 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
     final CameraController? cameraController = _controller;
 
     return IconButton(
-      iconSize: 70,
-      icon: widget.captureControlIcon ??
+      icon: widget.captureControlBuilder?.call(context, _detectedFace) ??
+          widget.captureControlIcon ??
           const CircleAvatar(
-              radius: 70,
+              radius: 35,
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.camera_alt, size: 35),
@@ -336,11 +338,10 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                 : Icons.flash_auto;
 
     return IconButton(
-      iconSize: 38,
       icon: widget.flashControlBuilder
               ?.call(context, _availableFlashMode[_currentFlashMode]) ??
           CircleAvatar(
-              radius: 38,
+              radius: 25,
               child: Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: Icon(icon, size: 25),
@@ -358,10 +359,9 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
     final CameraController? cameraController = _controller;
 
     return IconButton(
-        iconSize: 38,
         icon: widget.lensControlIcon ??
             const CircleAvatar(
-                radius: 38,
+                radius: 25,
                 child: Padding(
                   padding: EdgeInsets.all(2.0),
                   child: Icon(Icons.switch_camera_sharp, size: 25),

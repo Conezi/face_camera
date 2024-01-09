@@ -1,3 +1,13 @@
+## 0.0.9
+
+- Added captureControlBuilder returning detected face so that developers can build a custom capture control icon.
+- Updated dependencies.
+- Modified `README.md`.
+
+**DEPRECATIONS**
+
+- The `captureControlIcon` have been replaced with `captureControlBuilder`.
+
 ## 0.0.8
 
 - Added indicatorShapes and indicatorAssetImage parameters so that developers can choose their desired face indicator.
