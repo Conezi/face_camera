@@ -82,7 +82,7 @@ class SmartFaceCamera extends StatefulWidget {
   /// Set true to automatically disable capture control widget when no face is detected.
   final bool autoDisableCaptureControl;
 
-  /// Option for controlling additional accuracy / speed trade-offs.
+  /// Use this to set your preferred performance mode.
   final FaceDetectorMode performanceMode;
 
   const SmartFaceCamera(

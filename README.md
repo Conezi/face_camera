@@ -107,6 +107,7 @@ Here is a list of properties available to customize your widget:
 | indicatorBuilder          | IndicatorBuilder        | use this to build custom widgets for the face indicator                       |
 | captureControlBuilder     | CaptureControlBuilder   | use this to build custom widgets for capture control                          |
 | autoDisableCaptureControl | bool                    | set true to disable capture control widget when no face is detected           |
+| performanceMode           | FaceDetectorMode        | Use this to set your preferred performance mode                               |
 
 ### Contributions
 ---  
