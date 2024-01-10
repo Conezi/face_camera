@@ -28,12 +28,14 @@ class SmartFaceCamera extends StatefulWidget {
   final void Function(File? image) onCapture;
   final void Function(Face? face)? onFaceDetected;
   final Widget? captureControlIcon;
+  final CaptureControlBuilder? captureControlBuilder;
   final Widget? lensControlIcon;
   final FlashControlBuilder? flashControlBuilder;
   final MessageBuilder? messageBuilder;
   final IndicatorShape indicatorShape;
   final String? indicatorAssetImage;
   final IndicatorBuilder? indicatorBuilder;
+  final bool autoDisableCaptureControl;
 
   const SmartFaceCamera(
       {this.imageResolution = ImageResolution.medium,
@@ -51,13 +53,17 @@ class SmartFaceCamera extends StatefulWidget {
           fontSize: 14, height: 1.5, fontWeight: FontWeight.w400),
       required this.onCapture,
       this.onFaceDetected,
-      this.captureControlIcon,
+      @Deprecated('Use [captureControlBuilder]') this.captureControlIcon,
+      this.captureControlBuilder,
       this.lensControlIcon,
       this.flashControlBuilder,
       this.messageBuilder,
       this.indicatorShape = IndicatorShape.defaultShape,
       this.indicatorAssetImage,
       this.indicatorBuilder,
+
+      /// Automatically disable capture control when no face is detected.
+      this.autoDisableCaptureControl = false,
       Key? key})
       : assert(
             indicatorShape != IndicatorShape.image ||
@@ -304,30 +310,42 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
     return const SizedBox.shrink();
   }
 
+  /// Enables controls only when camera is initialized.
+  bool get _enableControls {
+    final CameraController? cameraController = _controller;
+    return cameraController != null && cameraController.value.isInitialized;
+  }
+
+  /// Determines when to disable the capture control button.
+  bool get _disableCapture =>
+      widget.autoDisableCaptureControl && _detectedFace?.face == null;
+
+  /// Determines the camera controls color.
+  Color? get iconColor =>
+      _enableControls ? null : Theme.of(context).disabledColor;
+
   /// Display the control buttons to take pictures.
   Widget _captureControlWidget() {
-    final CameraController? cameraController = _controller;
-
     return IconButton(
-      iconSize: 70,
-      icon: widget.captureControlIcon ??
-          const CircleAvatar(
-              radius: 70,
-              child: Padding(
+      icon: widget.captureControlBuilder?.call(context, _detectedFace) ??
+          widget.captureControlIcon ??
+          CircleAvatar(
+              radius: 35,
+              foregroundColor: _enableControls && !_disableCapture
+                  ? null
+                  : Theme.of(context).disabledColor,
+              child: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(Icons.camera_alt, size: 35),
               )),
-      onPressed:
-          cameraController != null && cameraController.value.isInitialized
-              ? _onTakePictureButtonPressed
-              : null,
+      onPressed: _enableControls && !_disableCapture
+          ? _onTakePictureButtonPressed
+          : null,
     );
   }
 
   /// Display the control buttons to switch between flash modes.
   Widget _flashControlWidget() {
-    final CameraController? cameraController = _controller;
-
     final icon =
         _availableFlashMode[_currentFlashMode] == CameraFlashMode.always
             ? Icons.flash_on
@@ -336,44 +354,40 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                 : Icons.flash_auto;
 
     return IconButton(
-      iconSize: 38,
       icon: widget.flashControlBuilder
               ?.call(context, _availableFlashMode[_currentFlashMode]) ??
           CircleAvatar(
-              radius: 38,
+              radius: 25,
+              foregroundColor: iconColor,
               child: Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: Icon(icon, size: 25),
               )),
-      onPressed:
-          cameraController != null && cameraController.value.isInitialized
-              ? () => _changeFlashMode(
-                  (_currentFlashMode + 1) % _availableFlashMode.length)
-              : null,
+      onPressed: _enableControls
+          ? () => _changeFlashMode(
+              (_currentFlashMode + 1) % _availableFlashMode.length)
+          : null,
     );
   }
 
   /// Display the control buttons to switch between camera lens.
   Widget _lensControlWidget() {
-    final CameraController? cameraController = _controller;
-
     return IconButton(
-        iconSize: 38,
         icon: widget.lensControlIcon ??
-            const CircleAvatar(
-                radius: 38,
-                child: Padding(
+            CircleAvatar(
+                radius: 25,
+                foregroundColor: iconColor,
+                child: const Padding(
                   padding: EdgeInsets.all(2.0),
                   child: Icon(Icons.switch_camera_sharp, size: 25),
                 )),
-        onPressed:
-            cameraController != null && cameraController.value.isInitialized
-                ? () {
-                    _currentCameraLens =
-                        (_currentCameraLens + 1) % _availableCameraLens.length;
-                    _initCamera();
-                  }
-                : null);
+        onPressed: _enableControls
+            ? () {
+                _currentCameraLens =
+                    (_currentCameraLens + 1) % _availableCameraLens.length;
+                _initCamera();
+              }
+            : null);
   }
 
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
@@ -465,7 +479,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
       _alreadyCheckingImage = true;
       try {
         await FaceIdentifier.scanImage(
-                cameraImage: cameraImage, camera: cameraController!.description)
+                cameraImage: cameraImage, controller: cameraController)
             .then((result) async {
           setState(() => _detectedFace = result);
 
