@@ -9,7 +9,8 @@ import '../models/detected_image.dart';
 class FaceIdentifier {
   static Future<DetectedFace?> scanImage(
       {required CameraImage cameraImage,
-      required CameraController? controller}) async {
+      required CameraController? controller,
+      required FaceDetectorMode performanceMode}) async {
     final orientations = {
       DeviceOrientation.portraitUp: 0,
       DeviceOrientation.landscapeLeft: 90,
@@ -19,6 +20,7 @@ class FaceIdentifier {
 
     DetectedFace? result;
     final face = await _detectFace(
+        performanceMode: performanceMode,
         visionImage:
             _inputImageFromCameraImage(cameraImage, controller, orientations));
     if (face != null) {
@@ -81,12 +83,14 @@ class FaceIdentifier {
     );
   }
 
-  static Future<DetectedFace?> _detectFace({required visionImage}) async {
+  static Future<DetectedFace?> _detectFace(
+      {required InputImage? visionImage,
+      required FaceDetectorMode performanceMode}) async {
     if (visionImage == null) return null;
     final options = FaceDetectorOptions(
         enableLandmarks: true,
         enableTracking: true,
-        performanceMode: FaceDetectorMode.fast);
+        performanceMode: performanceMode);
     final faceDetector = FaceDetector(options: options);
     try {
       final List<Face> faces = await faceDetector.processImage(visionImage);

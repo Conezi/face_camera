@@ -82,6 +82,9 @@ class SmartFaceCamera extends StatefulWidget {
   /// Set true to automatically disable capture control widget when no face is detected.
   final bool autoDisableCaptureControl;
 
+  /// Option for controlling additional accuracy / speed trade-offs.
+  final FaceDetectorMode performanceMode;
+
   const SmartFaceCamera(
       {this.imageResolution = ImageResolution.medium,
       this.defaultCameraLens,
@@ -107,6 +110,7 @@ class SmartFaceCamera extends StatefulWidget {
       this.indicatorAssetImage,
       this.indicatorBuilder,
       this.autoDisableCaptureControl = false,
+      this.performanceMode = FaceDetectorMode.fast,
       Key? key})
       : assert(
             indicatorShape != IndicatorShape.image ||
@@ -522,7 +526,9 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
       _alreadyCheckingImage = true;
       try {
         await FaceIdentifier.scanImage(
-                cameraImage: cameraImage, controller: cameraController)
+                cameraImage: cameraImage,
+                controller: cameraController,
+                performanceMode: widget.performanceMode)
             .then((result) async {
           setState(() => _detectedFace = result);
 
