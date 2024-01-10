@@ -1,6 +1,7 @@
 ## 0.1.0
 
 - Improved codebase documentations.
+- Added `performanceMode` allowing developers to choose their preferred performance mode.
 
 ## 0.0.9
 
