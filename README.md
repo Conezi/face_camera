@@ -84,11 +84,11 @@ Here is a list of properties available to customize your widget:
 
 | Name                      | Type                    | Description                                                                   |
 |---------------------------|-------------------------|-------------------------------------------------------------------------------|
-| onCapture                 | Function(File?)         | callback invoked when camera captured image                                   |
+| onCapture                 | Function(File?)         | callback invoked when camera captures image                                   |
 | onFaceDetected            | Function(DetectedFace?) | callback invoked when camera detects face                                     |
-| imageResolution           | ImageResolution         | used this to set image resolution                                             |
-| defaultCameraLens         | CameraLens              | used this to set initial camera lens direction                                |
-| defaultFlashMode          | CameraFlashMode         | used this to set initial flash mode                                           |
+| imageResolution           | ImageResolution         | use this to set image resolution                                              |
+| defaultCameraLens         | CameraLens              | use this to set initial camera lens direction                                 |
+| defaultFlashMode          | CameraFlashMode         | use this to set initial flash mode                                            |
 | enableAudio               | bool                    | set false to disable capture sound                                            |
 | autoCapture               | bool                    | set true to capture image on face detected                                    |
 | showControls              | bool                    | set false to hide all controls                                                |
