@@ -106,7 +106,7 @@ Here is a list of properties available to customize your widget:
 | indicatorAssetImage       | String                  | use this to pass an asset image when IndicatorShape is set to image           |
 | indicatorBuilder          | IndicatorBuilder        | use this to build custom widgets for the face indicator                       |
 | captureControlBuilder     | CaptureControlBuilder   | use this to build custom widgets for capture control                          |
-| autoDisableCaptureControl | bool                    | set true to disable capture control when no face is detected                  |
+| autoDisableCaptureControl | bool                    | set true to disable capture control widget when no face is detected           |
 
 ### Contributions
 ---  
