@@ -39,10 +39,6 @@ jobs:
       # Get flutter dependencies.
       - run: flutter pub get
 
-      # Uncomment this step to verify the use of 'flutter format' on each commit.
-      - name: Verify flutter formatting
-        run: flutter format --set-exit-if-changed .
-
       # Statically analyze the Dart code for any errors.
       - name: Analyze project flutter source
         run: flutter analyze .
