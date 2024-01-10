@@ -35,6 +35,7 @@ class SmartFaceCamera extends StatefulWidget {
   final IndicatorShape indicatorShape;
   final String? indicatorAssetImage;
   final IndicatorBuilder? indicatorBuilder;
+  /// Automatically disable capture control when no face is detected.
   final bool autoDisableCaptureControl;
 
   const SmartFaceCamera(
@@ -61,8 +62,6 @@ class SmartFaceCamera extends StatefulWidget {
       this.indicatorShape = IndicatorShape.defaultShape,
       this.indicatorAssetImage,
       this.indicatorBuilder,
-
-      /// Automatically disable capture control when no face is detected.
       this.autoDisableCaptureControl = false,
       Key? key})
       : assert(
