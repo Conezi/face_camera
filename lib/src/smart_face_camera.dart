@@ -35,6 +35,7 @@ class SmartFaceCamera extends StatefulWidget {
   final IndicatorShape indicatorShape;
   final String? indicatorAssetImage;
   final IndicatorBuilder? indicatorBuilder;
+
   /// Automatically disable capture control when no face is detected.
   final bool autoDisableCaptureControl;
 
