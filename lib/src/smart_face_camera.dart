@@ -269,7 +269,8 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                       fit: StackFit.expand,
                       children: <Widget>[
                         _cameraDisplayWidget(),
-                        if (_detectedFace != null) ...[
+                        if (_detectedFace != null &&
+                            widget.indicatorShape != IndicatorShape.none) ...[
                           SizedBox(
                               width: cameraController.value.previewSize!.width,
                               height:
