@@ -1,3 +1,9 @@
+## 0.1.0
+
+- Improved codebase documentations.
+- Added `performanceMode` allowing developers to choose their preferred performance mode.
+- Include `IndicatorShape.none` allowing developers to hide face indicator.
+
 ## 0.0.9
 
 - Added `captureControlBuilder` returning detected face so that developers can build a custom capture control icon.

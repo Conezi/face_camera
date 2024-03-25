@@ -13,31 +13,77 @@ import 'res/builders.dart';
 import 'utils/logger.dart';
 
 class SmartFaceCamera extends StatefulWidget {
+  /// Use this to set image resolution.
   final ImageResolution imageResolution;
+
+  /// Use this to set initial camera lens direction.
   final CameraLens? defaultCameraLens;
+
+  /// Use this to set initial flash mode.
   final CameraFlashMode defaultFlashMode;
+
+  /// Set false to disable capture sound.
   final bool enableAudio;
+
+  /// Set true to capture image on face detected.
   final bool autoCapture;
+
+  /// Set false to hide all controls.
   final bool showControls;
+
+  /// Set false to hide capture control icon.
   final bool showCaptureControl;
+
+  /// Set false to hide flash control control icon.
   final bool showFlashControl;
+
+  /// Set false to hide camera lens control icon.
   final bool showCameraLensControl;
+
+  /// Use this pass a message above the camera.
   final String? message;
+
+  /// Style applied to the message widget.
   final TextStyle messageStyle;
+
+  /// Use this to lock camera orientation.
   final CameraOrientation? orientation;
+
+  /// Callback invoked when camera captures image.
   final void Function(File? image) onCapture;
+
+  /// Callback invoked when camera detects face.
   final void Function(Face? face)? onFaceDetected;
+
+  /// Use this to render a custom widget for capture control.
   final Widget? captureControlIcon;
+
+  /// Use this to build custom widgets for capture control.
   final CaptureControlBuilder? captureControlBuilder;
+
+  /// Use this to render a custom widget for camera lens control.
   final Widget? lensControlIcon;
+
+  /// Use this to build custom widgets for flash control based on camera flash mode.
   final FlashControlBuilder? flashControlBuilder;
+
+  /// Use this to build custom messages based on face position.
   final MessageBuilder? messageBuilder;
+
+  /// Use this to change the shape of the face indicator.
   final IndicatorShape indicatorShape;
+
+  /// Use this to pass an asset image when IndicatorShape is set to image.
   final String? indicatorAssetImage;
+
+  /// Use this to build custom widgets for the face indicator
   final IndicatorBuilder? indicatorBuilder;
 
-  /// Automatically disable capture control when no face is detected.
+  /// Set true to automatically disable capture control widget when no face is detected.
   final bool autoDisableCaptureControl;
+
+  /// Use this to set your preferred performance mode.
+  final FaceDetectorMode performanceMode;
 
   const SmartFaceCamera(
       {this.imageResolution = ImageResolution.medium,
@@ -64,6 +110,7 @@ class SmartFaceCamera extends StatefulWidget {
       this.indicatorAssetImage,
       this.indicatorBuilder,
       this.autoDisableCaptureControl = false,
+      this.performanceMode = FaceDetectorMode.fast,
       Key? key})
       : assert(
             indicatorShape != IndicatorShape.image ||
@@ -222,7 +269,8 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                       fit: StackFit.expand,
                       children: <Widget>[
                         _cameraDisplayWidget(),
-                        if (_detectedFace != null) ...[
+                        if (_detectedFace != null &&
+                            widget.indicatorShape != IndicatorShape.none) ...[
                           SizedBox(
                               width: cameraController.value.previewSize!.width,
                               height:
@@ -479,7 +527,9 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
       _alreadyCheckingImage = true;
       try {
         await FaceIdentifier.scanImage(
-                cameraImage: cameraImage, controller: cameraController)
+                cameraImage: cameraImage,
+                controller: cameraController,
+                performanceMode: widget.performanceMode)
             .then((result) async {
           setState(() => _detectedFace = result);
 

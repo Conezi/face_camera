@@ -74,5 +74,10 @@ enum IndicatorShape {
   circle,
   triangle,
   triangleInverted,
-  image
+
+  /// Uses an asset image as face indicator
+  image,
+
+  /// Hide face indicator
+  none
 }
