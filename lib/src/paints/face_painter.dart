@@ -102,6 +102,8 @@ class FacePainter extends CustomPainter {
           );
         }));
         break;
+      case IndicatorShape.none:
+        break;
     }
   }
 
