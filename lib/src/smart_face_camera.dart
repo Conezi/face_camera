@@ -470,7 +470,11 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
           if (file != null) {
             widget.onCapture(File(file.path));
           }
-
+ WidgetsBinding.instance.removeObserver(this);
+          if (cameraController != null &&
+              cameraController.value.isInitialized) {
+            cameraController.dispose();
+          }
           /// Resume image stream after 2 seconds of capture
           Future.delayed(const Duration(seconds: 2)).whenComplete(() {
             if (mounted && cameraController.value.isInitialized) {
