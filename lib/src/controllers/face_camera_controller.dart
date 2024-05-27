@@ -184,13 +184,9 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
 
           if (result != null) {
             try {
-              print('object 1');
               if (result.wellPositioned) {
-                print('object 2');
                 onFaceDetected?.call(result.face);
-                print('object 3');
                 if (autoCapture) {
-                  print('object 4');
                   onTakePictureButtonPressed();
                 }
               }
