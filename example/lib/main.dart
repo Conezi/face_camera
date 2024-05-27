@@ -22,6 +22,23 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   File? _capturedImage;
 
+  late FaceCameraController controller;
+
+  @override
+  void initState() {
+    controller = FaceCameraController(
+      autoCapture: true,
+      defaultCameraLens: CameraLens.front,
+      onCapture: (File? image) {
+        setState(() => _capturedImage = image);
+      },
+      onFaceDetected: (Face? face) {
+        //Do something
+      },
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -53,14 +70,7 @@ class _MyAppState extends State<MyApp> {
               );
             }
             return SmartFaceCamera(
-                autoCapture: true,
-                defaultCameraLens: CameraLens.front,
-                onCapture: (File? image) {
-                  setState(() => _capturedImage = image);
-                },
-                onFaceDetected: (Face? face) {
-                  //Do something
-                },
+                controller: controller,
                 messageBuilder: (context, face) {
                   if (face == null) {
                     return _message('Place your face in the camera');
