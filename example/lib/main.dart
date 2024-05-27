@@ -58,7 +58,10 @@ class _MyAppState extends State<MyApp> {
                       fit: BoxFit.fitWidth,
                     ),
                     ElevatedButton(
-                        onPressed: () => setState(() => _capturedImage = null),
+                        onPressed: () async {
+                          await controller.startImageStream();
+                          setState(() => _capturedImage = null);
+                        },
                         child: const Text(
                           'Capture Again',
                           textAlign: TextAlign.center,
@@ -91,4 +94,11 @@ class _MyAppState extends State<MyApp> {
             style: const TextStyle(
                 fontSize: 14, height: 1.5, fontWeight: FontWeight.w400)),
       );
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
 }

@@ -93,7 +93,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    widget.controller.dispose();
+    widget.controller.stopImageStream();
     super.dispose();
   }
 

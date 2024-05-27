@@ -90,18 +90,18 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
           enableAudio: enableAudio,
           imageFormatGroup: Platform.isAndroid
               ? ImageFormatGroup.nv21
-              : ImageFormatGroup.bgra8888)
-        ..initialize();
+              : ImageFormatGroup.bgra8888);
+
+      await cameraController.initialize().whenComplete((){
+        value = value.copyWith(
+            isInitialized: true, cameraController: cameraController);
+      });
 
       await changeFlashMode(value.availableFlashMode.indexOf(defaultFlashMode));
 
       await cameraController
           .lockCaptureOrientation(
-              EnumHandler.cameraOrientationToDeviceOrientation(orientation))
-          .then((_) {
-        value = value.copyWith(
-            isInitialized: true, cameraController: cameraController);
-      });
+              EnumHandler.cameraOrientationToDeviceOrientation(orientation));
     }
 
     startImageStream();
@@ -114,7 +114,7 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
         .setFlashMode(EnumHandler.cameraFlashModeToFlashMode(
             value.availableFlashMode[newIndex]))
         .then((_) {
-      value = value.copyWith(currentCameraLens: newIndex);
+      value = value.copyWith(currentFlashMode: newIndex);
     });
   }
 
@@ -150,23 +150,23 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     logError(e.code, e.description);
   }
 
-  void startImageStream() {
+  Future<void> startImageStream() async {
     final CameraController? cameraController = value.cameraController;
     if (cameraController == null || !cameraController.value.isInitialized) {
       return;
     }
     if (!cameraController.value.isStreamingImages) {
-      cameraController.startImageStream(_processImage);
+      await cameraController.startImageStream(_processImage);
     }
   }
 
-  void stopImageStream() {
+  Future<void> stopImageStream() async {
     final CameraController? cameraController = value.cameraController;
     if (cameraController == null || !cameraController.value.isInitialized) {
       return;
     }
     if (cameraController.value.isStreamingImages) {
-      cameraController.stopImageStream();
+      await cameraController.stopImageStream();
     }
   }
 
@@ -184,9 +184,13 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
 
           if (result != null) {
             try {
+              print('object 1');
               if (result.wellPositioned) {
+                print('object 2');
                 onFaceDetected?.call(result.face);
+                print('object 3');
                 if (autoCapture) {
+                  print('object 4');
                   onTakePictureButtonPressed();
                 }
               }
@@ -213,17 +217,6 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
           if (file != null) {
             onCapture.call(File(file.path));
           }
-
-          /// Resume image stream after 2 seconds of capture
-          Future.delayed(const Duration(seconds: 2)).whenComplete(() {
-            if (cameraController.value.isInitialized) {
-              try {
-                startImageStream();
-              } catch (e) {
-                logError(e.toString());
-              }
-            }
-          });
         });
       });
     } catch (e) {
