@@ -1,3 +1,13 @@
+## 0.1.1
+
+- Added `FaceCameraController` allowing developers to control the `SmartFaceCamera` widget.
+- Updated dependencies.
+- Modified `README.md`.
+
+**BREAKING CHANGES:**
+- `captureControlIcon` has been replaced with `captureControlBuilder`.
+- `imageResolution, defaultCameraLens, defaultFlashMode, enableAudio, autoCapture, orientation, onCapture, onFaceDetected, performanceMode` has been moved to `FaceCameraController`.
+
 ## 0.1.0
 
 - Improved codebase documentations.
