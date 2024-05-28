@@ -60,18 +60,32 @@ void main() async{
   runApp(const MyApp());
 }
 ```
-* Then render the component in your application setting the onCapture callback.
+
+* Create a new `FaceCameraController` controller, setting the onCapture callback.
+```dart
+  late FaceCameraController controller;
+
+  @override
+  void initState() {
+    controller = FaceCameraController(
+      autoCapture: true,
+      defaultCameraLens: CameraLens.front,
+      onCapture: (File? image) {
+        
+      },
+    );
+  super.initState();
+}
+```
+
+* Then render the component in your application using the required options.
 ```dart
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SmartFaceCamera(
-          autoCapture: true,
-          defaultCameraLens: CameraLens.front,
+          controller: controller,
           message: 'Center your face in the square',
-          onCapture: (File? image){
-            
-          },
         )
     );
   }
@@ -82,6 +96,27 @@ void main() async{
 
 Here is a list of properties available to customize your widget:
 
+| Name                      | Type                  | Description                                                                   |
+|---------------------------|-----------------------|-------------------------------------------------------------------------------|
+| controller                | FaceCameraController  | The controller for the [SmartFaceCamera] widget                               |
+| showControls              | bool                  | set false to hide all controls                                                |
+| showCaptureControl        | bool                  | set false to hide capture control icon                                        |
+| showFlashControl          | bool                  | set false to hide flash control control icon                                  |
+| showCameraLensControl     | bool                  | set false to hide camera lens control icon                                    |
+| message                   | String                | use this pass a message above the camera                                      |
+| messageStyle              | TextStyle             | style applied to the message widget                                           |
+| lensControlIcon           | Widget                | use this to render a custom widget for camera lens control                    |
+| flashControlBuilder       | FlashControlBuilder   | use this to build custom widgets for flash control based on camera flash mode |
+| messageBuilder            | MessageBuilder        | use this to build custom messages based on face position                      |
+| indicatorShape            | IndicatorShape        | use this to change the shape of the face indicator                            |
+| indicatorAssetImage       | String                | use this to pass an asset image when IndicatorShape is set to image           |
+| indicatorBuilder          | IndicatorBuilder      | use this to build custom widgets for the face indicator                       |
+| captureControlBuilder     | CaptureControlBuilder | use this to build custom widgets for capture control                          |
+| autoDisableCaptureControl | bool                  | set true to disable capture control widget when no face is detected           |
+
+
+Here is a list of properties available to customize your controller:
+
 | Name                      | Type                    | Description                                                                   |
 |---------------------------|-------------------------|-------------------------------------------------------------------------------|
 | onCapture                 | Function(File?)         | callback invoked when camera captures image                                   |
@@ -91,23 +126,9 @@ Here is a list of properties available to customize your widget:
 | defaultFlashMode          | CameraFlashMode         | use this to set initial flash mode                                            |
 | enableAudio               | bool                    | set false to disable capture sound                                            |
 | autoCapture               | bool                    | set true to capture image on face detected                                    |
-| showControls              | bool                    | set false to hide all controls                                                |
-| showCaptureControl        | bool                    | set false to hide capture control icon                                        |
-| showFlashControl          | bool                    | set false to hide flash control control icon                                  |
-| showCameraLensControl     | bool                    | set false to hide camera lens control icon                                    |
-| message                   | String                  | use this pass a message above the camera                                      |
-| messageStyle              | TextStyle               | style applied to the message widget                                           |
 | orientation               | CameraOrientation       | use this to lock camera orientation                                           |
-| captureControlIcon        | Widget                  | use this to render a custom widget for capture control                        |
-| lensControlIcon           | Widget                  | use this to render a custom widget for camera lens control                    |
-| flashControlBuilder       | FlashControlBuilder     | use this to build custom widgets for flash control based on camera flash mode |
-| messageBuilder            | MessageBuilder          | use this to build custom messages based on face position                      |
-| indicatorShape            | IndicatorShape          | use this to change the shape of the face indicator                            |
-| indicatorAssetImage       | String                  | use this to pass an asset image when IndicatorShape is set to image           |
-| indicatorBuilder          | IndicatorBuilder        | use this to build custom widgets for the face indicator                       |
-| captureControlBuilder     | CaptureControlBuilder   | use this to build custom widgets for capture control                          |
-| autoDisableCaptureControl | bool                    | set true to disable capture control widget when no face is detected           |
 | performanceMode           | FaceDetectorMode        | Use this to set your preferred performance mode                               |
+
 
 ### Contributions
 ---  

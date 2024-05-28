@@ -9,9 +9,9 @@ export 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 export 'package:face_camera/src/smart_face_camera.dart';
 export 'package:face_camera/src/res/enums.dart';
 export 'package:face_camera/src/models/detected_image.dart';
+export 'package:face_camera/src/controllers/face_camera_controller.dart';
 
 class FaceCamera {
-  //static const MethodChannel _channel = MethodChannel('face_camera');
   static List<CameraDescription> _cameras = [];
 
   /// Initialize device cameras
