@@ -1,3 +1,9 @@
+## 0.1.2 Pre-release
+
+**DEPRECATIONS**
+
+- The `onTakePictureButtonPressed` have been replaced with `captureImage`.
+
 ## 0.1.1
 
 - Added `FaceCameraController` allowing developers to control the `SmartFaceCamera` widget.
