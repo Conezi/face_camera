@@ -92,16 +92,15 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
               ? ImageFormatGroup.nv21
               : ImageFormatGroup.bgra8888);
 
-      await cameraController.initialize().whenComplete((){
+      await cameraController.initialize().whenComplete(() {
         value = value.copyWith(
             isInitialized: true, cameraController: cameraController);
       });
 
       await changeFlashMode(value.availableFlashMode.indexOf(defaultFlashMode));
 
-      await cameraController
-          .lockCaptureOrientation(
-              EnumHandler.cameraOrientationToDeviceOrientation(orientation));
+      await cameraController.lockCaptureOrientation(
+          EnumHandler.cameraOrientationToDeviceOrientation(orientation));
     }
 
     startImageStream();

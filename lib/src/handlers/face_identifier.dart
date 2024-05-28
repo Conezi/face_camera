@@ -62,7 +62,8 @@ class FaceIdentifier {
     // validate format depending on platform
     // only supported formats:
     // * bgra8888 for iOS
-    if (format == null || (Platform.isIOS && format != InputImageFormat.bgra8888)) return null;
+    if (format == null ||
+        (Platform.isIOS && format != InputImageFormat.bgra8888)) return null;
 
     if (image.planes.isEmpty) return null;
 
@@ -71,8 +72,8 @@ class FaceIdentifier {
       bytes: Uint8List.fromList(
         image.planes.fold(
             <int>[],
-                (List<int> previousValue, element) =>
-            previousValue..addAll(element.bytes)),
+            (List<int> previousValue, element) =>
+                previousValue..addAll(element.bytes)),
       ),
       metadata: InputImageMetadata(
         size: Size(image.width.toDouble(), image.height.toDouble()),
