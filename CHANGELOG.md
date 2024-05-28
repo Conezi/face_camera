@@ -2,6 +2,7 @@
 
 - Added `FaceCameraController` allowing developers to control the `SmartFaceCamera` widget.
 - Updated dependencies.
+- Enhanced performance.
 - Modified `README.md`.
 
 **BREAKING CHANGES:**
