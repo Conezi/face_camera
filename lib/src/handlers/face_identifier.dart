@@ -3,6 +3,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
+import 'package:face_camera/src/extension/nv21_converter.dart';
 
 import '../models/detected_image.dart';
 
@@ -64,17 +65,20 @@ class FaceIdentifier {
     // * bgra8888 for iOS
     if (format == null ||
         (Platform.isIOS && format != InputImageFormat.bgra8888)) return null;
-
     if (image.planes.isEmpty) return null;
+
+    final bytes = Platform.isAndroid
+        ? image.getNv21Uint8List()
+        : Uint8List.fromList(
+            image.planes.fold(
+                <int>[],
+                (List<int> previousValue, element) =>
+                    previousValue..addAll(element.bytes)),
+          );
 
     // compose InputImage using bytes
     return InputImage.fromBytes(
-      bytes: Uint8List.fromList(
-        image.planes.fold(
-            <int>[],
-            (List<int> previousValue, element) =>
-                previousValue..addAll(element.bytes)),
-      ),
+      bytes: bytes,
       metadata: InputImageMetadata(
         size: Size(image.width.toDouble(), image.height.toDouble()),
         rotation: rotation, // used only in Android

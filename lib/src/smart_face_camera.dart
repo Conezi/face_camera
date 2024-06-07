@@ -260,7 +260,7 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                 child: Icon(Icons.camera_alt, size: 35),
               )),
       onPressed: widget.controller.enableControls && !_disableCapture
-          ? widget.controller.onTakePictureButtonPressed
+          ? widget.controller.captureImage
           : null,
     );
   }

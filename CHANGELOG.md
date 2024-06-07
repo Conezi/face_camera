@@ -1,3 +1,12 @@
+## 0.1.2
+
+- Updated dependencies.
+- Fixed face detection issue on some Android devices
+
+**DEPRECATIONS**
+
+- The `onTakePictureButtonPressed` have been replaced with `captureImage`.
+
 ## 0.1.1
 
 - Added `FaceCameraController` allowing developers to control the `SmartFaceCamera` widget.

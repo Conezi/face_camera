@@ -186,7 +186,7 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
               if (result.wellPositioned) {
                 onFaceDetected?.call(result.face);
                 if (autoCapture) {
-                  onTakePictureButtonPressed();
+                  captureImage();
                 }
               }
             } catch (e) {
@@ -202,7 +202,12 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     }
   }
 
+  @Deprecated('Use [captureImage]')
   void onTakePictureButtonPressed() async {
+    captureImage();
+  }
+
+  void captureImage() async {
     final CameraController? cameraController = value.cameraController;
     try {
       cameraController!.stopImageStream().whenComplete(() async {
