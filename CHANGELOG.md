@@ -1,4 +1,7 @@
-## 0.1.2 Pre-release
+## 0.1.2
+
+- Updated dependencies.
+- Fixed face detection issue on some Android devices
 
 **DEPRECATIONS**
 

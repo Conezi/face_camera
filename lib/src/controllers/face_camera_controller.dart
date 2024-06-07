@@ -207,7 +207,6 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     captureImage();
   }
 
-
   void captureImage() async {
     final CameraController? cameraController = value.cameraController;
     try {
