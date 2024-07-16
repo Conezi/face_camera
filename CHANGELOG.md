@@ -1,3 +1,7 @@
+## 0.1.3
+
+- Added `zoom` control through `FaceCameraController`.
+
 ## 0.1.2
 
 - Updated dependencies.

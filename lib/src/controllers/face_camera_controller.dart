@@ -23,6 +23,7 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     this.performanceMode = FaceDetectorMode.fast,
     required this.onCapture,
     this.onFaceDetected,
+    this.zoom = 1.0,
   }) : super(FaceCameraState.uninitialized());
 
   /// The desired resolution for the camera.
@@ -51,6 +52,9 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
 
   /// Callback invoked when camera detects face.
   final void Function(Face? face)? onFaceDetected;
+
+  /// Gets the current camera lens.
+  final double zoom;
 
   /// Gets all available camera lens and set current len
   void _getAllAvailableCameraLens() {
@@ -155,6 +159,7 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
       return;
     }
     if (!cameraController.value.isStreamingImages) {
+      await cameraController.setZoomLevel(zoom);
       await cameraController.startImageStream(_processImage);
     }
   }

@@ -128,6 +128,7 @@ Here is a list of properties available to customize your widget from the control
 | autoCapture               | bool                    | set true to capture image on face detected                                    |
 | orientation               | CameraOrientation       | use this to lock camera orientation                                           |
 | performanceMode           | FaceDetectorMode        | Use this to set your preferred performance mode                               |
+| zoom                      | double                  | use this to set the zoom                                                      |
 
 
 ### Contributions
