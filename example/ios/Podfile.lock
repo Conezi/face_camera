@@ -93,7 +93,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   camera_avfoundation: 759172d1a77ae7be0de08fc104cfb79738b8a59e
-  face_camera: 9473f8c80e20d67bd2d946ed573ccee168d31186
+  face_camera: 787c50bc183b37c9b6f9777a1416e5b384b5c234
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   google_mlkit_commons: 384e4e206e122b6dad430d3158205e0b2fac6789
   google_mlkit_face_detection: ff627695d8eba051db7e0f13f7b20d802df1f84c

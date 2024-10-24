@@ -2,6 +2,7 @@
 
 - Updated dependencies.
 - Fixed face detection issue on some Android devices
+- Changed minimum iOS requirement to 15.5.0
 
 ## 0.1.2
 
