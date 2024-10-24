@@ -121,6 +121,15 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     });
   }
 
+  /// The supplied [zoom] value should be between 1.0 and the maximum supported
+  Future<void> setZoomLevel(double zoom) async {
+    final CameraController? cameraController = value.cameraController;
+    if (cameraController == null) {
+      return;
+    }
+    await cameraController.setZoomLevel(zoom);
+  }
+
   Future<void> changeCameraLens() async {
     value = value.copyWith(
         currentCameraLens:
