@@ -119,18 +119,18 @@ Here is a list of properties available to customize your widget:
 \
 Here is a list of properties available to customize your widget from the controller:
 
-| Name                  | Type                    | Description                                                                |
-|-----------------------|-------------------------|----------------------------------------------------------------------------|
-| onCapture             | Function(File?)         | callback invoked when camera captures image                                |
-| onFaceDetected        | Function(DetectedFace?) | callback invoked when camera detects face                                  |
-| imageResolution       | ImageResolution         | use this to set image resolution                                           |
-| defaultCameraLens     | CameraLens              | use this to set initial camera lens direction                              |
-| defaultFlashMode      | CameraFlashMode         | use this to set initial flash mode                                         |
-| enableAudio           | bool                    | set false to disable capture sound                                         |
-| autoCapture           | bool                    | set true to capture image on face detected                                 |
-| ignoreFacePositioning | bool                    | Set true to trigger onFaceDetected event if the face isn't well positioned |
-| orientation           | CameraOrientation       | use this to lock camera orientation                                        |
-| performanceMode       | FaceDetectorMode        | Use this to set your preferred performance mode                            |
+| Name                  | Type                    | Description                                                                   |
+|-----------------------|-------------------------|-------------------------------------------------------------------------------|
+| onCapture             | Function(File?)         | callback invoked when camera captures image                                   |
+| onFaceDetected        | Function(DetectedFace?) | callback invoked when camera detects face                                     |
+| imageResolution       | ImageResolution         | use this to set image resolution                                              |
+| defaultCameraLens     | CameraLens              | use this to set initial camera lens direction                                 |
+| defaultFlashMode      | CameraFlashMode         | use this to set initial flash mode                                            |
+| enableAudio           | bool                    | set false to disable capture sound                                            |
+| autoCapture           | bool                    | set true to capture image on face detected                                    |
+| ignoreFacePositioning | bool                    | set true to trigger onFaceDetected event when the face is not well positioned |
+| orientation           | CameraOrientation       | use this to lock camera orientation                                           |
+| performanceMode       | FaceDetectorMode        | Use this to set your preferred performance mode                               |
 
 
 ### Contributions
