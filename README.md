@@ -90,7 +90,7 @@ void main() async{
     );
   }
 ```
-
+\
 ### Customization
 ---  
 
@@ -132,7 +132,7 @@ Here is a list of properties available to customize your widget from the control
 | orientation           | CameraOrientation       | use this to lock camera orientation                                     |
 | performanceMode       | FaceDetectorMode        | Use this to set your preferred performance mode                         |
 
-
+\
 ### Contributions
 ---  
 
