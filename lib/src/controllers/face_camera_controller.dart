@@ -41,7 +41,7 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
   /// Set true to capture image on face detected.
   final bool autoCapture;
 
-  /// Set true to trigger onCapture event when the face is not well positioned
+  /// Set true to trigger onCapture even when the face is not well positioned
   final bool ignoreFacePositioning;
 
   /// Use this to lock camera orientation.
@@ -196,9 +196,11 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
 
           if (result != null) {
             try {
-              onFaceDetected?.call(result.face);
-              if ((result.wellPositioned || ignoreFacePositioning) &&
-                  autoCapture) {
+              if (result.face != null) {
+                onFaceDetected?.call(result.face);
+              }
+              if (autoCapture &&
+                  (result.wellPositioned || ignoreFacePositioning)) {
                 captureImage();
               }
             } catch (e) {
