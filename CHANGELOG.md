@@ -1,6 +1,7 @@
 ## 0.1.3
 
 - Updated dependencies.
+- Fixed face detection issue on some Android devices
 
 ## 0.1.2
 

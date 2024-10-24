@@ -82,7 +82,7 @@ class FaceIdentifier {
       metadata: InputImageMetadata(
         size: Size(image.width.toDouble(), image.height.toDouble()),
         rotation: rotation, // used only in Android
-        format: format, // used only in iOS
+        format: Platform.isIOS ? format : InputImageFormat.nv21,
         bytesPerRow: image.planes.first.bytesPerRow, // used only in iOS
       ),
     );
