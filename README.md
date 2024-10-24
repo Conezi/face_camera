@@ -114,8 +114,7 @@ Here is a list of properties available to customize your widget:
 | captureControlBuilder     | CaptureControlBuilder | use this to build custom widgets for capture control                          |
 | autoDisableCaptureControl | bool                  | set true to disable capture control widget when no face is detected           |
 
-<br />
-Here is a list of properties available to customize your widget from the controller:<br />
+Here is a list of properties available to customize your widget from the controller:
 
 | Name                  | Type                    | Description                                                                |
 |-----------------------|-------------------------|----------------------------------------------------------------------------|
