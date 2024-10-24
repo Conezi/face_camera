@@ -20,7 +20,7 @@ face_camera: ^<latest-version>
 ### iOS
 ---  
 
-* Minimum iOS Deployment Target: 11.0
+* Minimum iOS Deployment Target: 15.5.0
 * Follow this <a href="https://github.com/bharat-biradar/Google-Ml-Kit-plugin#requirements">link</a> and setup  `ML Kit` this is required for `face_camera` to function properly on `iOS`
 
 Add two rows to the `ios/Runner/Info.plist:`
@@ -115,19 +115,22 @@ Here is a list of properties available to customize your widget:
 | autoDisableCaptureControl | bool                  | set true to disable capture control widget when no face is detected           |
 
 
+\
+\
 Here is a list of properties available to customize your widget from the controller:
 
-| Name                      | Type                    | Description                                                                   |
-|---------------------------|-------------------------|-------------------------------------------------------------------------------|
-| onCapture                 | Function(File?)         | callback invoked when camera captures image                                   |
-| onFaceDetected            | Function(DetectedFace?) | callback invoked when camera detects face                                     |
-| imageResolution           | ImageResolution         | use this to set image resolution                                              |
-| defaultCameraLens         | CameraLens              | use this to set initial camera lens direction                                 |
-| defaultFlashMode          | CameraFlashMode         | use this to set initial flash mode                                            |
-| enableAudio               | bool                    | set false to disable capture sound                                            |
-| autoCapture               | bool                    | set true to capture image on face detected                                    |
-| orientation               | CameraOrientation       | use this to lock camera orientation                                           |
-| performanceMode           | FaceDetectorMode        | Use this to set your preferred performance mode                               |
+| Name                  | Type                    | Description                                                             |
+|-----------------------|-------------------------|-------------------------------------------------------------------------|
+| onCapture             | Function(File?)         | callback invoked when camera captures image                             |
+| onFaceDetected        | Function(DetectedFace?) | callback invoked when camera detects face                               |
+| imageResolution       | ImageResolution         | use this to set image resolution                                        |
+| defaultCameraLens     | CameraLens              | use this to set initial camera lens direction                           |
+| defaultFlashMode      | CameraFlashMode         | use this to set initial flash mode                                      |
+| enableAudio           | bool                    | set false to disable capture sound                                      |
+| autoCapture           | bool                    | set true to capture image on face detected                              |
+| ignoreFacePositioning | bool                    | set true to trigger onCapture even when the face is not well positioned |
+| orientation           | CameraOrientation       | use this to lock camera orientation                                     |
+| performanceMode       | FaceDetectorMode        | Use this to set your preferred performance mode                         |
 
 
 ### Contributions

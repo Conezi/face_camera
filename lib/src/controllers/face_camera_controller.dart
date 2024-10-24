@@ -19,6 +19,7 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     this.defaultFlashMode = CameraFlashMode.auto,
     this.enableAudio = true,
     this.autoCapture = false,
+    this.ignoreFacePositioning = false,
     this.orientation = CameraOrientation.portraitUp,
     this.performanceMode = FaceDetectorMode.fast,
     required this.onCapture,
@@ -39,6 +40,9 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
 
   /// Set true to capture image on face detected.
   final bool autoCapture;
+
+  /// Set true to trigger onCapture even when the face is not well positioned
+  final bool ignoreFacePositioning;
 
   /// Use this to lock camera orientation.
   final CameraOrientation? orientation;
@@ -117,6 +121,15 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     });
   }
 
+  /// The supplied [zoom] value should be between 1.0 and the maximum supported
+  Future<void> setZoomLevel(double zoom) async {
+    final CameraController? cameraController = value.cameraController;
+    if (cameraController == null) {
+      return;
+    }
+    await cameraController.setZoomLevel(zoom);
+  }
+
   Future<void> changeCameraLens() async {
     value = value.copyWith(
         currentCameraLens:
@@ -183,11 +196,12 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
 
           if (result != null) {
             try {
-              if (result.wellPositioned) {
+              if (result.face != null) {
                 onFaceDetected?.call(result.face);
-                if (autoCapture) {
-                  captureImage();
-                }
+              }
+              if (autoCapture &&
+                  (result.wellPositioned || ignoreFacePositioning)) {
+                captureImage();
               }
             } catch (e) {
               logError(e.toString());

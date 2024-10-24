@@ -1,7 +1,16 @@
+## 0.1.3
+
+- Updated dependencies.
+- Fixed face detection issue on some Android devices.
+- Changed minimum iOS requirement to 15.5.0.
+- Added `setZoomLevel` control to the `FaceCameraController`.
+- Added `ignoreFacePositioning` allowing developers to trigger `onCapture` even when the face is not well positioned.
+- Modified `README.md`.
+
 ## 0.1.2
 
 - Updated dependencies.
-- Fixed face detection issue on some Android devices
+- Fixed face detection issue on some Android devices.
 
 **DEPRECATIONS**
 

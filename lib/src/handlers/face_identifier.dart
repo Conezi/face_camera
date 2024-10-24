@@ -82,7 +82,7 @@ class FaceIdentifier {
       metadata: InputImageMetadata(
         size: Size(image.width.toDouble(), image.height.toDouble()),
         rotation: rotation, // used only in Android
-        format: format, // used only in iOS
+        format: Platform.isIOS ? format : InputImageFormat.nv21,
         bytesPerRow: image.planes.first.bytesPerRow, // used only in iOS
       ),
     );
@@ -117,12 +117,12 @@ class FaceIdentifier {
       detectedFace = face;
 
       // Head is rotated to the right rotY degrees
-      if (face.headEulerAngleY! > 2 || face.headEulerAngleY! < -2) {
+      if (face.headEulerAngleY! > 5 || face.headEulerAngleY! < -5) {
         wellPositioned = false;
       }
 
       // Head is tilted sideways rotZ degrees
-      if (face.headEulerAngleZ! > 2 || face.headEulerAngleZ! < -2) {
+      if (face.headEulerAngleZ! > 5 || face.headEulerAngleZ! < -5) {
         wellPositioned = false;
       }
 
@@ -157,8 +157,15 @@ class FaceIdentifier {
           wellPositioned = false;
         }
       }
+
+      if (wellPositioned) {
+        break;
+      }
     }
 
-    return DetectedFace(wellPositioned: wellPositioned, face: detectedFace);
+    return DetectedFace(
+      wellPositioned: wellPositioned,
+      face: detectedFace,
+    );
   }
 }
