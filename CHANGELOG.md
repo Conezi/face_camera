@@ -1,3 +1,7 @@
+## 0.1.4
+
+- Adds a namespace for compatibility with AGP 8.0.
+
 ## 0.1.3
 
 - Updated dependencies.
