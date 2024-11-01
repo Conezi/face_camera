@@ -24,6 +24,7 @@ if (flutterVersionName == null) {
 
 
 android {
+    namespace "com.conezi.face_camera_example"
     compileSdkVersion flutter.compileSdkVersion
 
     compileOptions {
