@@ -36,7 +36,7 @@ end
 
 
 # add this line:
-$iOSVersion = '15.5'  # or newer version
+$iOSVersion = '15.5.0'  # or newer version
 
 post_install do |installer|
   # add these lines:
