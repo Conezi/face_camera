@@ -143,4 +143,4 @@ Contributions of any kind are more than welcome! Feel free to fork and improve `
 
 You can support the library by donating, liking it on Pub, starring it on GitHub, and reporting any bugs you encounter.
 
-[![Show 💖 on Selar](https://img.shields.io/badge/-Show_💖_on_Selar-orange?logo=heart&logoColor=white)](https://selar.com/showlove/conezi)
+[![💖 Show Love on Selar](https://img.shields.io/badge/-💖_Show_Love_on_Selar-orange?logo=heart&logoColor=white)](https://selar.com/showlove/conezi)
