@@ -141,4 +141,6 @@ Contributions of any kind are more than welcome! Feel free to fork and improve `
 ### Support the Library
 ---  
 
-You can support the library by liking it on pub, staring in on Github and reporting any bugs you encounter.
+You can support the library by donating, liking it on Pub, starring it on GitHub, and reporting any bugs you encounter.
+
+[![Show 💖 on Selar](https://img.shields.io/badge/-Show_💖_on_Selar-orange?logo=heart&logoColor=white)](https://selar.com/showlove/conezi)
