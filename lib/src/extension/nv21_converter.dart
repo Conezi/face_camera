@@ -7,6 +7,15 @@ extension Nv21Converter on CameraImage {
     final width = this.width;
     final height = this.height;
 
+    // Safety check: ensure we have enough planes
+    if (planes.length < 3) {
+      print(
+        '⚠️ Camera image has ${planes.length} plane(s), expected 3 for NV21',
+      );
+      // Fallback: return the Y plane only
+      return planes[0].bytes;
+    }
+
     final yPlane = planes[0];
     final uPlane = planes[1];
     final vPlane = planes[2];
@@ -44,7 +53,7 @@ extension Nv21Converter on CameraImage {
           final bufferIndex = uvOffset + (x * uvPixelStride);
           //V channel
           nv21[idUV++] = vBuffer[bufferIndex];
-          //V channel
+          //U channel
           nv21[idUV++] = uBuffer[bufferIndex];
         }
       }

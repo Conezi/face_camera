@@ -76,35 +76,44 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     }
 
     value = value.copyWith(
-        availableCameraLens: availableCameraLens,
-        currentCameraLens: currentCameraLens);
+      availableCameraLens: availableCameraLens,
+      currentCameraLens: currentCameraLens,
+    );
   }
 
   Future<void> _initCamera() async {
     final cameras = FaceCamera.cameras
-        .where((c) =>
-            c.lensDirection ==
-            EnumHandler.cameraLensToCameraLensDirection(
-                value.availableCameraLens[value.currentCameraLens]))
+        .where(
+          (c) =>
+              c.lensDirection ==
+              EnumHandler.cameraLensToCameraLensDirection(
+                value.availableCameraLens[value.currentCameraLens],
+              ),
+        )
         .toList();
 
     if (cameras.isNotEmpty) {
-      final cameraController = CameraController(cameras.first,
-          EnumHandler.imageResolutionToResolutionPreset(imageResolution),
-          enableAudio: enableAudio,
-          imageFormatGroup: Platform.isAndroid
-              ? ImageFormatGroup.nv21
-              : ImageFormatGroup.bgra8888);
+      final cameraController = CameraController(
+        cameras.first,
+        EnumHandler.imageResolutionToResolutionPreset(imageResolution),
+        enableAudio: enableAudio,
+        imageFormatGroup: Platform.isAndroid
+            ? ImageFormatGroup.yuv420
+            : ImageFormatGroup.bgra8888,
+      );
 
       await cameraController.initialize().whenComplete(() {
         value = value.copyWith(
-            isInitialized: true, cameraController: cameraController);
+          isInitialized: true,
+          cameraController: cameraController,
+        );
       });
 
       await changeFlashMode(value.availableFlashMode.indexOf(defaultFlashMode));
 
       await cameraController.lockCaptureOrientation(
-          EnumHandler.cameraOrientationToDeviceOrientation(orientation));
+        EnumHandler.cameraOrientationToDeviceOrientation(orientation),
+      );
     }
 
     startImageStream();
@@ -114,11 +123,14 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     final newIndex =
         index ?? (value.currentFlashMode + 1) % value.availableFlashMode.length;
     await value.cameraController!
-        .setFlashMode(EnumHandler.cameraFlashModeToFlashMode(
-            value.availableFlashMode[newIndex]))
+        .setFlashMode(
+          EnumHandler.cameraFlashModeToFlashMode(
+            value.availableFlashMode[newIndex],
+          ),
+        )
         .then((_) {
-      value = value.copyWith(currentFlashMode: newIndex);
-    });
+          value = value.copyWith(currentFlashMode: newIndex);
+        });
   }
 
   /// The supplied [zoom] value should be between 1.0 and the maximum supported
@@ -132,8 +144,9 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
 
   Future<void> changeCameraLens() async {
     value = value.copyWith(
-        currentCameraLens:
-            (value.currentCameraLens + 1) % value.availableCameraLens.length);
+      currentCameraLens:
+          (value.currentCameraLens + 1) % value.availableCameraLens.length,
+    );
     _initCamera();
   }
 
@@ -188,10 +201,10 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
       value = value.copyWith(alreadyCheckingImage: true);
       try {
         await FaceIdentifier.scanImage(
-                cameraImage: cameraImage,
-                controller: cameraController,
-                performanceMode: performanceMode)
-            .then((result) async {
+          cameraImage: cameraImage,
+          controller: cameraController,
+          performanceMode: performanceMode,
+        ).then((result) async {
           value = value.copyWith(detectedFace: result);
 
           if (result != null) {
@@ -238,7 +251,7 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     }
   }
 
-/*  void onViewFinderTap(TapDownDetails details, BoxConstraints constraints) {
+  /*  void onViewFinderTap(TapDownDetails details, BoxConstraints constraints) {
     if (value.cameraController == null) {
       return;
     }
