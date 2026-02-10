@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/widgets.dart';
@@ -22,9 +23,12 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     this.ignoreFacePositioning = false,
     this.orientation = CameraOrientation.portraitUp,
     this.performanceMode = FaceDetectorMode.fast,
+    this.captureDelay = 3,
+    this.showDebugLandmarks = false,
     required this.onCapture,
     this.onFaceDetected,
-  }) : super(FaceCameraState.uninitialized());
+  })  : assert(captureDelay >= 0, 'captureDelay must be non-negative'),
+        super(FaceCameraState.uninitialized());
 
   /// The desired resolution for the camera.
   final ImageResolution imageResolution;
@@ -49,6 +53,17 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
 
   /// Use this to set your preferred performance mode.
   final FaceDetectorMode performanceMode;
+
+  /// Countdown delay in seconds before auto-capture when face is well-positioned.
+  /// Only applies when autoCapture is true. Default is 3 seconds.
+  /// Set to 0 to capture immediately without countdown.
+  final int captureDelay;
+
+  /// Set true to show debug markers for facial landmarks (eyes, nose, mouth, etc.)
+  final bool showDebugLandmarks;
+
+  Timer? _countdownTimer;
+  int _currentCountdown = 0;
 
   /// Callback invoked when camera captures image.
   final void Function(File? image) onCapture;
@@ -167,6 +182,8 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     if (cameraController == null || !cameraController.value.isInitialized) {
       return;
     }
+    // Clear capturing flag when starting/restarting image stream
+    value = value.copyWith(isCapturing: false);
     if (!cameraController.value.isStreamingImages) {
       await cameraController.startImageStream(_processImage);
     }
@@ -199,13 +216,38 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
               if (result.face != null) {
                 onFaceDetected?.call(result.face);
               }
-              if (autoCapture &&
-                  (result.wellPositioned || ignoreFacePositioning)) {
-                captureImage();
+
+              // Check if face landmarks are centered in frame
+              // Note: Image dimensions are swapped for portrait orientation
+              bool isFaceCentered = result.face != null &&
+                  _isFaceCentered(
+                      result.face!,
+                      Size(cameraImage.height.toDouble(),
+                          cameraImage.width.toDouble()));
+
+              // Update state with positioning status
+              value = value.copyWith(isFaceWellPositioned: isFaceCentered);
+
+              // Require face to be detected, then check positioning (unless ignored)
+              bool shouldCapture = result.face != null &&
+                  (isFaceCentered || ignoreFacePositioning);
+
+              // Don't start countdown if already capturing
+              if (autoCapture && shouldCapture && !value.isCapturing) {
+                _startCountdown();
+              } else if (value.isCapturing) {
+                // If capturing, make sure countdown is cancelled
+                _cancelCountdown();
+              } else {
+                _cancelCountdown();
               }
             } catch (e) {
               logError(e.toString());
             }
+          } else {
+            // No face detected - update state and cancel countdown
+            value = value.copyWith(isFaceWellPositioned: false);
+            _cancelCountdown();
           }
         });
         value = value.copyWith(alreadyCheckingImage: false);
@@ -216,6 +258,247 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
     }
   }
 
+  void _startCountdown() {
+    // If countdown is 0, capture immediately
+    if (captureDelay == 0) {
+      captureImage();
+      return;
+    }
+
+    // If countdown already running, do nothing
+    if (_countdownTimer != null && _countdownTimer!.isActive) {
+      return;
+    }
+
+    // Start new countdown
+    _currentCountdown = captureDelay;
+    value = value.copyWith(countdown: _currentCountdown);
+
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      // Check if face is still detected and well-positioned
+      final detectedFace = value.detectedFace;
+      if (detectedFace == null ||
+          detectedFace.face == null ||
+          !value.isFaceWellPositioned) {
+        // Face moved or disappeared - cancel countdown
+        timer.cancel();
+        value = value.copyWith(countdown: null);
+        _currentCountdown = 0;
+        return;
+      }
+
+      _currentCountdown--;
+      if (_currentCountdown <= 0) {
+        timer.cancel();
+        value = value.copyWith(countdown: null);
+        captureImage();
+      } else {
+        value = value.copyWith(countdown: _currentCountdown);
+      }
+    });
+  }
+
+  void _cancelCountdown() {
+    if (_countdownTimer != null && _countdownTimer!.isActive) {
+      _countdownTimer!.cancel();
+      _currentCountdown = 0;
+      value = value.copyWith(countdown: null);
+    }
+  }
+
+  /// Get guidance for positioning the face in the fixed frame
+  /// Returns a message like "Move closer", "Move left", etc.
+  /// Returns null only when face is perfectly positioned (triggers countdown)
+  String? getFacePositionGuidance() {
+    final detectedFace = value.detectedFace;
+    if (detectedFace?.face == null) {
+      return "Place your face in the frame";
+    }
+
+    final face = detectedFace!.face!;
+    final cameraController = value.cameraController;
+    if (cameraController == null) return "Place your face in the frame";
+
+    final imageSize = Size(
+      cameraController.value.previewSize!.height,
+      cameraController.value.previewSize!.width,
+    );
+
+    // If already centered, no guidance needed (countdown will start)
+    if (_isFaceCentered(face, imageSize)) {
+      return null;
+    }
+
+    // Check face distance by measuring eye separation
+    final leftEye = face.landmarks[FaceLandmarkType.leftEye];
+    final rightEye = face.landmarks[FaceLandmarkType.rightEye];
+    if (leftEye != null && rightEye != null) {
+      final leftEyeX = leftEye.position.x / imageSize.width;
+      final leftEyeY = leftEye.position.y / imageSize.height;
+      final rightEyeX = rightEye.position.x / imageSize.width;
+      final rightEyeY = rightEye.position.y / imageSize.height;
+
+      // Calculate actual Euclidean distance (not squared)
+      final dx = leftEyeX - rightEyeX;
+      final dy = leftEyeY - rightEyeY;
+      final eyeDistance = sqrt(dx * dx + dy * dy);
+
+      // If eyes are too close (distance < 0.14), face is too far
+      if (eyeDistance < 0.14) {
+        return "Move closer";
+      }
+
+      // If eyes are too far apart (distance > 0.28), face is too close
+      if (eyeDistance > 0.28) {
+        return "Move back";
+      }
+    }
+
+    // Calculate face metrics
+    final frameSize = 0.7;
+    final frameCenterX = 0.5;
+    final frameCenterY = 0.5;
+
+    var faceLeft = (face.boundingBox.left / imageSize.width).clamp(0.0, 1.0);
+    var faceRight = (face.boundingBox.right / imageSize.width).clamp(0.0, 1.0);
+    var faceTop = (face.boundingBox.top / imageSize.height).clamp(0.0, 1.0);
+    var faceBottom = (face.boundingBox.bottom / imageSize.height).clamp(0.0, 1.0);
+
+    final faceWidth = faceRight - faceLeft;
+    final faceCenterX = (faceLeft + faceRight) / 2;
+    final faceCenterY = (faceTop + faceBottom) / 2;
+
+    // Priority 1: Distance (face too small or too large)
+    // If face is very small (width < 50% of frame), need to get closer
+    if (faceWidth < frameSize * 0.5) {
+      return "Move closer";
+    }
+
+    // If face is too large (width > 95% of frame), need to move back
+    if (faceWidth > frameSize * 0.95) {
+      return "Move back";
+    }
+
+    // Priority 2: Centering (if face is reasonable size but not centered)
+    final centerOffsetX = faceCenterX - frameCenterX;
+    final centerOffsetY = faceCenterY - frameCenterY;
+
+    // Horizontal guidance (use threshold slightly less than strict requirement of 18%)
+    if (centerOffsetX.abs() > 0.15) {
+      // For front camera (mirrored display):
+      // If faceCenterX < frameCenterX (left side), user should move right
+      // If faceCenterX > frameCenterX (right side), user should move left
+      if (centerOffsetX < 0) {
+        return "Move right";
+      } else {
+        return "Move left";
+      }
+    }
+
+    // Vertical guidance
+    if (centerOffsetY.abs() > 0.15) {
+      if (centerOffsetY < 0) {
+        return "Move down";
+      } else {
+        return "Move up";
+      }
+    }
+
+    // If we get here, face is good size and reasonably centered,
+    // but not meeting the strict requirements yet
+    return "Center your face";
+  }
+
+  /// Check if face is well-positioned in the fixed frame
+  /// Returns true ONLY if ALL required facial landmarks are inside the frame
+  /// AND the nose is near the center AND the face is close enough
+  bool _isFaceCentered(Face face, Size imageSize) {
+    // Define the fixed frame size (70% of screen, centered)
+    final frameSize = 0.7;
+    final frameCenterX = 0.5;
+    final frameCenterY = 0.5;
+
+    // Calculate fixed frame bounds (normalized 0-1)
+    final frameLeft = frameCenterX - (frameSize / 2);   // 0.15
+    final frameRight = frameCenterX + (frameSize / 2);  // 0.85
+    final frameTop = frameCenterY - (frameSize / 2);    // 0.15
+    final frameBottom = frameCenterY + (frameSize / 2); // 0.85
+
+    // First check: Face must be at correct distance (eyes not too close or too far)
+    final leftEye = face.landmarks[FaceLandmarkType.leftEye];
+    final rightEye = face.landmarks[FaceLandmarkType.rightEye];
+    if (leftEye != null && rightEye != null) {
+      final leftEyeX = leftEye.position.x / imageSize.width;
+      final leftEyeY = leftEye.position.y / imageSize.height;
+      final rightEyeX = rightEye.position.x / imageSize.width;
+      final rightEyeY = rightEye.position.y / imageSize.height;
+
+      // Calculate actual Euclidean distance (not squared)
+      final dx = leftEyeX - rightEyeX;
+      final dy = leftEyeY - rightEyeY;
+      final eyeDistance = sqrt(dx * dx + dy * dy);
+
+      // Face must be at correct distance (0.14 to 0.28)
+      if (eyeDistance < 0.14 || eyeDistance > 0.28) {
+        return false;
+      }
+    }
+
+    // Check that ALL required landmarks are within the frame
+    final requiredLandmarks = [
+      FaceLandmarkType.leftEye,
+      FaceLandmarkType.rightEye,
+      FaceLandmarkType.noseBase,
+      FaceLandmarkType.bottomMouth,
+      FaceLandmarkType.leftMouth,
+      FaceLandmarkType.rightMouth,
+    ];
+
+    for (final landmarkType in requiredLandmarks) {
+      final landmark = face.landmarks[landmarkType];
+      if (landmark == null) {
+        return false; // Required landmark not detected
+      }
+
+      // Convert landmark position to normalized coordinates (0-1)
+      final x = (landmark.position.x / imageSize.width).clamp(0.0, 1.0);
+      final y = (landmark.position.y / imageSize.height).clamp(0.0, 1.0);
+
+      // Check if landmark is within frame bounds
+      if (x < frameLeft || x > frameRight || y < frameTop || y > frameBottom) {
+        return false; // Landmark is outside frame
+      }
+    }
+
+    // Additional check: Nose must be near center (within 20% tolerance)
+    final noseLandmark = face.landmarks[FaceLandmarkType.noseBase];
+    if (noseLandmark != null) {
+      final noseX = (noseLandmark.position.x / imageSize.width).clamp(0.0, 1.0);
+      final noseY = (noseLandmark.position.y / imageSize.height).clamp(0.0, 1.0);
+
+      // Check if nose is within 20% of center (0.4 to 0.6 range)
+      final centerTolerance = 0.2;
+      if (noseX < (frameCenterX - centerTolerance) ||
+          noseX > (frameCenterX + centerTolerance) ||
+          noseY < (frameCenterY - centerTolerance) ||
+          noseY > (frameCenterY + centerTolerance)) {
+        return false; // Nose is not near center
+      }
+    }
+
+    // Check head rotation (must be facing forward)
+    if (face.headEulerAngleY != null &&
+        (face.headEulerAngleY! > 12 || face.headEulerAngleY! < -12)) {
+      return false; // Head rotated left/right
+    }
+    if (face.headEulerAngleZ != null &&
+        (face.headEulerAngleZ! > 12 || face.headEulerAngleZ! < -12)) {
+      return false; // Head tilted sideways
+    }
+
+    return true; // All checks passed
+  }
+
   @Deprecated('Use [captureImage]')
   void onTakePictureButtonPressed() async {
     captureImage();
@@ -224,6 +507,9 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
   void captureImage() async {
     final CameraController? cameraController = value.cameraController;
     try {
+      // Set capturing flag to prevent countdown from starting again
+      value = value.copyWith(isCapturing: true);
+
       cameraController!.stopImageStream().whenComplete(() async {
         await Future.delayed(const Duration(milliseconds: 500));
         takePicture().then((XFile? file) {
@@ -269,6 +555,7 @@ class FaceCameraController extends ValueNotifier<FaceCameraState> {
   /// Once the controller is disposed, it cannot be used anymore.
   @override
   Future<void> dispose() async {
+    _cancelCountdown();
     final CameraController? cameraController = value.cameraController;
 
     if (cameraController != null && cameraController.value.isInitialized) {

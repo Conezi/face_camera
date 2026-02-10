@@ -8,14 +8,31 @@ class FacePainter extends CustomPainter {
       {required this.imageSize,
       this.face,
       required this.indicatorShape,
-      this.indicatorAssetImage});
+      this.indicatorAssetImage,
+      this.isFaceWellPositioned = false,
+      this.showDebugLandmarks = false});
   final Size imageSize;
   double? scaleX, scaleY;
   final Face? face;
   final IndicatorShape indicatorShape;
   final String? indicatorAssetImage;
+  final bool isFaceWellPositioned;
+  final bool showDebugLandmarks;
   @override
   void paint(Canvas canvas, Size size) {
+    scaleX = size.width / imageSize.width;
+    scaleY = size.height / imageSize.height;
+
+    // Handle fixedFrame mode separately
+    if (indicatorShape == IndicatorShape.fixedFrame) {
+      _drawFixedFrame(canvas, size);
+      // Don't return early - continue to draw debug landmarks if enabled
+      if (showDebugLandmarks && face != null) {
+        _drawDebugLandmarks(canvas, size);
+      }
+      return;
+    }
+
     if (face == null) return;
 
     Paint paint;
@@ -31,9 +48,6 @@ class FacePainter extends CustomPainter {
         ..strokeWidth = 3.0
         ..color = Colors.green;
     }
-
-    scaleX = size.width / imageSize.width;
-    scaleY = size.height / imageSize.height;
 
     switch (indicatorShape) {
       case IndicatorShape.defaultShape:
@@ -102,14 +116,130 @@ class FacePainter extends CustomPainter {
           );
         }));
         break;
+      case IndicatorShape.fixedFrame:
+        // Handled at the beginning of paint() method
+        break;
       case IndicatorShape.none:
         break;
     }
+
+    // Draw debug landmarks if enabled
+    if (showDebugLandmarks && face != null) {
+      _drawDebugLandmarks(canvas, size);
+    }
+  }
+
+  /// Draw debug markers for facial landmarks
+  void _drawDebugLandmarks(Canvas canvas, Size size) {
+    if (face == null || scaleX == null || scaleY == null) return;
+
+    final landmarkPaint = Paint()
+      ..style = PaintingStyle.fill
+      ..strokeWidth = 2.0;
+
+    // Draw each landmark with different colors
+    final landmarks = <FaceLandmarkType, Color>{
+      FaceLandmarkType.leftEye: Colors.blue,
+      FaceLandmarkType.rightEye: Colors.blue,
+      FaceLandmarkType.noseBase: Colors.green,
+      FaceLandmarkType.bottomMouth: Colors.red,
+      FaceLandmarkType.leftMouth: Colors.red,
+      FaceLandmarkType.rightMouth: Colors.red,
+      FaceLandmarkType.leftCheek: Colors.yellow,
+      FaceLandmarkType.rightCheek: Colors.yellow,
+      FaceLandmarkType.leftEar: Colors.purple,
+      FaceLandmarkType.rightEar: Colors.purple,
+    };
+
+    for (final entry in landmarks.entries) {
+      final landmark = face!.landmarks[entry.key];
+      if (landmark != null) {
+        landmarkPaint.color = entry.value;
+
+        // Convert landmark position to screen coordinates
+        final x = size.width - landmark.position.x.toDouble() * scaleX!;
+        final y = landmark.position.y.toDouble() * scaleY!;
+
+        // Draw landmark as a circle
+        canvas.drawCircle(Offset(x, y), 6.0, landmarkPaint);
+
+        // Draw white border for visibility
+        final borderPaint = Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.0
+          ..color = Colors.white;
+        canvas.drawCircle(Offset(x, y), 6.0, borderPaint);
+      }
+    }
+
+    // Draw face bounding box in debug mode (clamped to image bounds)
+    final boundingBoxPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0
+      ..color = Colors.cyan;
+
+    // Clamp bounding box to valid image range (ML Kit can extend beyond image)
+    final clampedLeft = face!.boundingBox.left.clamp(0.0, imageSize.width);
+    final clampedRight = face!.boundingBox.right.clamp(0.0, imageSize.width);
+    final clampedTop = face!.boundingBox.top.clamp(0.0, imageSize.height);
+    final clampedBottom = face!.boundingBox.bottom.clamp(0.0, imageSize.height);
+
+    canvas.drawRect(
+      Rect.fromLTRB(
+        size.width - clampedLeft * scaleX!,
+        clampedTop * scaleY!,
+        size.width - clampedRight * scaleX!,
+        clampedBottom * scaleY!,
+      ),
+      boundingBoxPaint,
+    );
   }
 
   @override
   bool shouldRepaint(FacePainter oldDelegate) {
-    return oldDelegate.imageSize != imageSize || oldDelegate.face != face;
+    return oldDelegate.imageSize != imageSize ||
+           oldDelegate.face != face ||
+           oldDelegate.showDebugLandmarks != showDebugLandmarks ||
+           oldDelegate.isFaceWellPositioned != isFaceWellPositioned;
+  }
+
+  /// Draw a fixed centered frame that changes color based on face position
+  void _drawFixedFrame(Canvas canvas, Size size) {
+    // Define fixed square in center of screen (70% of screen width)
+    final double squareSize = size.width * 0.7;
+    final Rect fixedRect = Rect.fromCenter(
+      center: Offset(size.width / 2, size.height / 2),
+      width: squareSize,
+      height: squareSize,
+    );
+
+    // Determine color based on face positioning
+    Paint paint;
+    if (face == null) {
+      // No face detected - white/gray
+      paint = Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 3.0
+        ..color = Colors.white.withOpacity(0.5);
+    } else if (isFaceWellPositioned) {
+      // Face is properly positioned - green
+      paint = Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 3.0
+        ..color = Colors.green;
+    } else {
+      // Face detected but not positioned correctly - red
+      paint = Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 3.0
+        ..color = Colors.red;
+    }
+
+    // Draw fixed rounded square
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(fixedRect, const Radius.circular(10)),
+      paint,
+    );
   }
 }
 

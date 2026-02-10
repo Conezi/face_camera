@@ -14,6 +14,9 @@ class FaceCameraState {
     required this.alreadyCheckingImage,
     this.cameraController,
     this.detectedFace,
+    this.countdown,
+    this.isCapturing = false,
+    this.isFaceWellPositioned = false,
   });
 
   /// Create a new [FaceCameraState] instance that is uninitialized.
@@ -26,6 +29,9 @@ class FaceCameraState {
           alreadyCheckingImage: false,
           cameraController: null,
           detectedFace: null,
+          countdown: null,
+          isCapturing: false,
+          isFaceWellPositioned: false,
           availableFlashMode: [
             CameraFlashMode.off,
             CameraFlashMode.auto,
@@ -62,6 +68,15 @@ class FaceCameraState {
 
   final DetectedFace? detectedFace;
 
+  /// Current countdown value (null if not counting down)
+  final int? countdown;
+
+  /// Whether a capture is currently in progress
+  final bool isCapturing;
+
+  /// Whether the face is well-positioned (meets all requirements)
+  final bool isFaceWellPositioned;
+
   /// Create a copy of this state with the given parameters.
   FaceCameraState copyWith({
     List<CameraLens>? availableCameraLens,
@@ -75,6 +90,9 @@ class FaceCameraState {
     CameraController? cameraController,
     List<CameraFlashMode>? availableFlashMode,
     DetectedFace? detectedFace,
+    Object? countdown = _undefinedCountdown,
+    bool? isCapturing,
+    bool? isFaceWellPositioned,
   }) {
     return FaceCameraState(
       availableCameraLens: availableCameraLens ?? this.availableCameraLens,
@@ -85,6 +103,14 @@ class FaceCameraState {
       cameraController: cameraController ?? this.cameraController,
       availableFlashMode: availableFlashMode ?? this.availableFlashMode,
       detectedFace: detectedFace ?? this.detectedFace,
+      countdown: countdown == _undefinedCountdown
+          ? this.countdown
+          : countdown as int?,
+      isCapturing: isCapturing ?? this.isCapturing,
+      isFaceWellPositioned: isFaceWellPositioned ?? this.isFaceWellPositioned,
     );
   }
 }
+
+/// Sentinel value to distinguish between "not provided" and "explicitly null"
+const Object _undefinedCountdown = Object();

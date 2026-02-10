@@ -78,6 +78,9 @@ enum IndicatorShape {
   /// Uses an asset image as face indicator
   image,
 
+  /// Fixed centered frame that changes color based on face position
+  fixedFrame,
+
   /// Hide face indicator
   none
 }

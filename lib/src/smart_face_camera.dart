@@ -159,6 +159,10 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                                                 widget.indicatorShape,
                                             indicatorAssetImage:
                                                 widget.indicatorAssetImage,
+                                            isFaceWellPositioned:
+                                                value.isFaceWellPositioned || value.isCapturing,
+                                            showDebugLandmarks:
+                                                widget.controller.showDebugLandmarks,
                                             imageSize: Size(
                                               cameraController
                                                   .value.previewSize!.height,
@@ -184,6 +188,28 @@ class _SmartFaceCameraState extends State<SmartFaceCamera>
                 size: size,
                 painter: HolePainter(),
               )
+            ],
+            if (value.countdown != null) ...[
+              Center(
+                child: Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      '${value.countdown}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 72,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
             if (widget.showControls) ...[
               Align(

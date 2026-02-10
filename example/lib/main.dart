@@ -28,7 +28,9 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     controller = FaceCameraController(
       autoCapture: true,
+      captureDelay: 3,
       defaultCameraLens: CameraLens.front,
+      showDebugLandmarks: false, // Set true to see facial landmarks
       onCapture: (File? image) {
         setState(() => _capturedImage = image);
       },
@@ -74,13 +76,19 @@ class _MyAppState extends State<MyApp> {
             }
             return SmartFaceCamera(
                 controller: controller,
+                indicatorShape: IndicatorShape.fixedFrame,
                 messageBuilder: (context, face) {
-                  if (face == null) {
-                    return _message('Place your face in the camera');
+                  // Show countdown message
+                  if (controller.value.countdown != null) {
+                    return _message('Hold still...');
                   }
-                  if (!face.wellPositioned) {
-                    return _message('Center your face in the square');
+
+                  // Get positioning guidance
+                  final guidance = controller.getFacePositionGuidance();
+                  if (guidance != null) {
+                    return _message(_customizeMessage(guidance));
                   }
+
                   return const SizedBox.shrink();
                 });
           })),
@@ -94,6 +102,27 @@ class _MyAppState extends State<MyApp> {
             style: const TextStyle(
                 fontSize: 14, height: 1.5, fontWeight: FontWeight.w400)),
       );
+
+  String _customizeMessage(String guidance) {
+    // Customize guidance messages here
+    switch (guidance) {
+      case 'Move closer':
+        return 'Come closer to the camera';
+      case 'Move back':
+        return 'Move away from the camera';
+      case 'Move left':
+      case 'Move right':
+      case 'Move up':
+      case 'Move down':
+        return guidance; // Keep directional messages as-is
+      case 'Center your face':
+        return 'Almost there! Center your face';
+      case 'Place your face in the frame':
+        return 'Position your face in the frame';
+      default:
+        return guidance;
+    }
+  }
 
   @override
   void dispose() {

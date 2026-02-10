@@ -116,20 +116,18 @@ class FaceIdentifier {
       // rect.add(face.boundingBox);
       detectedFace = face;
 
-      // Head is rotated to the right rotY degrees
-      if (face.headEulerAngleY! > 5 || face.headEulerAngleY! < -5) {
+      // Head is rotated to the right rotY degrees (balanced)
+      if (face.headEulerAngleY! > 12 || face.headEulerAngleY! < -12) {
         wellPositioned = false;
       }
 
-      // Head is tilted sideways rotZ degrees
-      if (face.headEulerAngleZ! > 5 || face.headEulerAngleZ! < -5) {
+      // Head is tilted sideways rotZ degrees (balanced)
+      if (face.headEulerAngleZ! > 12 || face.headEulerAngleZ! < -12) {
         wellPositioned = false;
       }
 
-      // If landmark detection was enabled with FaceDetectorOptions (mouth, ears,
-      // eyes, cheeks, and nose available):
-      final FaceLandmark? leftEar = face.landmarks[FaceLandmarkType.leftEar];
-      final FaceLandmark? rightEar = face.landmarks[FaceLandmarkType.rightEar];
+      // If landmark detection was enabled with FaceDetectorOptions (mouth, nose available)
+      // Note: Ears are often not visible in close-up face captures, so we don't require them
       final FaceLandmark? bottomMouth =
           face.landmarks[FaceLandmarkType.bottomMouth];
       final FaceLandmark? rightMouth =
@@ -137,23 +135,24 @@ class FaceIdentifier {
       final FaceLandmark? leftMouth =
           face.landmarks[FaceLandmarkType.leftMouth];
       final FaceLandmark? noseBase = face.landmarks[FaceLandmarkType.noseBase];
-      if (leftEar == null ||
-          rightEar == null ||
+
+      // Only require nose and mouth landmarks (ears often not visible in close-up)
+      if (noseBase == null ||
           bottomMouth == null ||
           rightMouth == null ||
-          leftMouth == null ||
-          noseBase == null) {
+          leftMouth == null) {
         wellPositioned = false;
       }
 
+      // Eye open checks - balanced (blinking tolerance but not too loose)
       if (face.leftEyeOpenProbability != null) {
-        if (face.leftEyeOpenProbability! < 0.5) {
+        if (face.leftEyeOpenProbability! < 0.4) {
           wellPositioned = false;
         }
       }
 
       if (face.rightEyeOpenProbability != null) {
-        if (face.rightEyeOpenProbability! < 0.5) {
+        if (face.rightEyeOpenProbability! < 0.4) {
           wellPositioned = false;
         }
       }
